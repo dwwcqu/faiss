@@ -20,7 +20,7 @@ TEST(TestGpuMemoryException, AddException) {
     size_t devFree = 0;
     size_t devTotal = 0;
 
-    CUDA_VERIFY(cudaMemGetInfo(&devFree, &devTotal));
+    CUDA_VERIFY(hipMemGetInfo(&devFree, &devTotal));
 
     // Figure out the dimensionality needed to get at least greater than
     // devTotal

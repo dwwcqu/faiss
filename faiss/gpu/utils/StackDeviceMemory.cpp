@@ -77,7 +77,7 @@ size_t StackDeviceMemory::Stack::getSizeAvailable() const {
     return (end_ - head_);
 }
 
-char* StackDeviceMemory::Stack::getAlloc(size_t size, cudaStream_t stream) {
+char* StackDeviceMemory::Stack::getAlloc(size_t size, hipStream_t stream) {
     // The user must check to see that the allocation fit within us
     auto sizeRemaining = getSizeAvailable();
 
@@ -131,7 +131,7 @@ char* StackDeviceMemory::Stack::getAlloc(size_t size, cudaStream_t stream) {
 void StackDeviceMemory::Stack::returnAlloc(
         char* p,
         size_t size,
-        cudaStream_t stream) {
+        hipStream_t stream) {
     // This allocation should be within ourselves
     FAISS_ASSERT(p >= start_ && p < end_);
 
@@ -187,7 +187,7 @@ std::string StackDeviceMemory::toString() const {
     return stack_.toString();
 }
 
-void* StackDeviceMemory::allocMemory(cudaStream_t stream, size_t size) {
+void* StackDeviceMemory::allocMemory(hipStream_t stream, size_t size) {
     // All allocations should have been adjusted to a multiple of 16 bytes
     FAISS_ASSERT(size % 16 == 0);
     return stack_.getAlloc(size, stream);
@@ -195,7 +195,7 @@ void* StackDeviceMemory::allocMemory(cudaStream_t stream, size_t size) {
 
 void StackDeviceMemory::deallocMemory(
         int device,
-        cudaStream_t stream,
+        hipStream_t stream,
         size_t size,
         void* p) {
     FAISS_ASSERT(p);

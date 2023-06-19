@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <cuda_runtime.h>
+#include <hip/hip_runtime.h>
 #include <chrono>
 
 namespace faiss {
@@ -18,7 +18,7 @@ class KernelTimer {
    public:
     /// Constructor starts the timer and adds an event into the current
     /// device stream
-    KernelTimer(cudaStream_t stream = 0);
+    KernelTimer(hipStream_t stream = 0);
 
     /// Destructor releases event resources
     ~KernelTimer();
@@ -30,9 +30,9 @@ class KernelTimer {
     float elapsedMilliseconds();
 
    private:
-    cudaEvent_t startEvent_;
-    cudaEvent_t stopEvent_;
-    cudaStream_t stream_;
+    hipEvent_t startEvent_;
+    hipEvent_t stopEvent_;
+    hipStream_t stream_;
     bool valid_;
 };
 

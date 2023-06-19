@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <cuda.h>
+#include <hip/hip_runtime.h>
 
 // allow usage for non-CUDA files
 #ifndef __host__

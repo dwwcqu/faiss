@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <cuda_runtime.h>
+#include <hip/hip_runtime.h>
 #include <faiss/gpu/GpuResources.h>
 #include <list>
 #include <memory>
@@ -33,8 +33,8 @@ class StackDeviceMemory {
     int getDevice() const;
 
     /// All allocations requested should be a multiple of 16 bytes
-    void* allocMemory(cudaStream_t stream, size_t size);
-    void deallocMemory(int device, cudaStream_t, size_t size, void* p);
+    void* allocMemory(hipStream_t stream, size_t size);
+    void deallocMemory(int device, hipStream_t, size_t size, void* p);
 
     size_t getSizeAvailable() const;
     std::string toString() const;
@@ -43,31 +43,31 @@ class StackDeviceMemory {
     /// Previous allocation ranges and the streams for which
     /// synchronization is required
     struct Range {
-        inline Range(char* s, char* e, cudaStream_t str)
+        inline Range(char* s, char* e, hipStream_t str)
                 : start_(s), end_(e), stream_(str) {}
 
         // References a memory range [start, end)
         char* start_;
         char* end_;
-        cudaStream_t stream_;
+        hipStream_t stream_;
     };
 
     struct Stack {
-        /// Constructor that allocates memory via cudaMalloc
+        /// Constructor that allocates memory via hipMalloc
         Stack(GpuResources* res, int device, size_t size);
 
         ~Stack();
 
         /// Returns how much size is available for an allocation without
-        /// calling cudaMalloc
+        /// calling hipMalloc
         size_t getSizeAvailable() const;
 
         /// Obtains an allocation; all allocations are guaranteed to be 16
         /// byte aligned
-        char* getAlloc(size_t size, cudaStream_t stream);
+        char* getAlloc(size_t size, hipStream_t stream);
 
         /// Returns an allocation
-        void returnAlloc(char* p, size_t size, cudaStream_t stream);
+        void returnAlloc(char* p, size_t size, hipStream_t stream);
 
         /// Returns the stack state
         std::string toString() const;

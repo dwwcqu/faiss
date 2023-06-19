@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <cublas_v2.h>
-#include <cuda_runtime.h>
+#include <hipblas.h>
+#include <hip/hip_runtime.h>
 #include <faiss/impl/FaissAssert.h>
 #include <memory>
 #include <utility>
@@ -54,7 +54,7 @@ enum AllocType {
     /// When using StandardGpuResources, any MemorySpace::Temporary allocations
     /// that cannot be satisfied within the TemporaryMemoryBuffer region fall
     /// back
-    /// to calling cudaMalloc which are sized to just the request at hand. These
+    /// to calling hipMalloc which are sized to just the request at hand. These
     /// "overflow" temporary allocations are marked with this AllocType.
     TemporaryMemoryOverflow = 11,
 };
@@ -66,13 +66,13 @@ std::string allocTypeToString(AllocType t);
 enum MemorySpace {
     /// Temporary device memory (guaranteed to no longer be used upon exit of a
     /// top-level index call, and where the streams using it have completed GPU
-    /// work). Typically backed by Device memory (cudaMalloc/cudaFree).
+    /// work). Typically backed by Device memory (hipMalloc/hipFree).
     Temporary = 0,
 
-    /// Managed using cudaMalloc/cudaFree (typical GPU device memory)
+    /// Managed using hipMalloc/hipFree (typical GPU device memory)
     Device = 1,
 
-    /// Managed using cudaMallocManaged/cudaFree (typical Unified CPU/GPU
+    /// Managed using hipMallocManaged/hipFree (typical Unified CPU/GPU
     /// memory)
     Unified = 2,
 };
@@ -88,7 +88,7 @@ struct AllocInfo {
               space(MemorySpace::Device),
               stream(nullptr) {}
 
-    inline AllocInfo(AllocType at, int dev, MemorySpace sp, cudaStream_t st)
+    inline AllocInfo(AllocType at, int dev, MemorySpace sp, hipStream_t st)
             : type(at), device(dev), space(sp), stream(st) {}
 
     /// Returns a string representation of this info
@@ -111,17 +111,17 @@ struct AllocInfo {
     ///
     /// The memory manager guarantees that the returned memory is free to use
     /// without data races on this stream specified.
-    cudaStream_t stream;
+    hipStream_t stream;
 };
 
 /// Create an AllocInfo for the current device with MemorySpace::Device
-AllocInfo makeDevAlloc(AllocType at, cudaStream_t st);
+AllocInfo makeDevAlloc(AllocType at, hipStream_t st);
 
 /// Create an AllocInfo for the current device with MemorySpace::Temporary
-AllocInfo makeTempAlloc(AllocType at, cudaStream_t st);
+AllocInfo makeTempAlloc(AllocType at, hipStream_t st);
 
 /// Create an AllocInfo for the current device
-AllocInfo makeSpaceAlloc(AllocType at, MemorySpace sp, cudaStream_t st);
+AllocInfo makeSpaceAlloc(AllocType at, MemorySpace sp, hipStream_t st);
 
 /// Information on what/where an allocation is, along with how big it should be
 struct AllocRequest : public AllocInfo {
@@ -134,7 +134,7 @@ struct AllocRequest : public AllocInfo {
             AllocType at,
             int dev,
             MemorySpace sp,
-            cudaStream_t st,
+            hipStream_t st,
             size_t sz)
             : AllocInfo(at, dev, sp, st), size(sz) {}
 
@@ -151,7 +151,7 @@ struct GpuMemoryReservation {
     GpuMemoryReservation(
             GpuResources* r,
             int dev,
-            cudaStream_t str,
+            hipStream_t str,
             void* p,
             size_t sz);
     GpuMemoryReservation(GpuMemoryReservation&& m) noexcept;
@@ -167,7 +167,7 @@ struct GpuMemoryReservation {
 
     GpuResources* res;
     int device;
-    cudaStream_t stream;
+    hipStream_t stream;
     void* data;
     size_t size;
 };
@@ -184,19 +184,19 @@ class GpuResources {
     virtual void initializeForDevice(int device) = 0;
 
     /// Returns the cuBLAS handle that we use for the given device
-    virtual cublasHandle_t getBlasHandle(int device) = 0;
+    virtual hipblasHandle_t getBlasHandle(int device) = 0;
 
     /// Returns the stream that we order all computation on for the
     /// given device
-    virtual cudaStream_t getDefaultStream(int device) = 0;
+    virtual hipStream_t getDefaultStream(int device) = 0;
 
     /// Overrides the default stream for a device to the user-supplied stream.
     /// The resources object does not own this stream (i.e., it will not destroy
     /// it).
-    virtual void setDefaultStream(int device, cudaStream_t stream) = 0;
+    virtual void setDefaultStream(int device, hipStream_t stream) = 0;
 
     /// Returns the set of alternative streams that we use for the given device
-    virtual std::vector<cudaStream_t> getAlternateStreams(int device) = 0;
+    virtual std::vector<hipStream_t> getAlternateStreams(int device) = 0;
 
     /// Memory management
     /// Returns an allocation from the given memory space, ordered with respect
@@ -210,24 +210,24 @@ class GpuResources {
     virtual void deallocMemory(int device, void* in) = 0;
 
     /// For MemorySpace::Temporary, how much space is immediately available
-    /// without cudaMalloc allocation?
+    /// without hipMalloc allocation?
     virtual size_t getTempMemoryAvailable(int device) const = 0;
 
     /// Returns the available CPU pinned memory buffer
     virtual std::pair<void*, size_t> getPinnedMemory() = 0;
 
     /// Returns the stream on which we perform async CPU <-> GPU copies
-    virtual cudaStream_t getAsyncCopyStream(int device) = 0;
+    virtual hipStream_t getAsyncCopyStream(int device) = 0;
 
     ///
     /// Functions provided by default
     ///
 
     /// Calls getBlasHandle with the current device
-    cublasHandle_t getBlasHandleCurrentDevice();
+    hipblasHandle_t getBlasHandleCurrentDevice();
 
     /// Calls getDefaultStream with the current device
-    cudaStream_t getDefaultStreamCurrentDevice();
+    hipStream_t getDefaultStreamCurrentDevice();
 
     /// Calls getTempMemoryAvailable with the current device
     size_t getTempMemoryAvailableCurrentDevice() const;
@@ -237,17 +237,17 @@ class GpuResources {
 
     /// Synchronizes the CPU with respect to the default stream for the
     /// given device
-    // equivalent to cudaDeviceSynchronize(getDefaultStream(device))
+    // equivalent to hipDeviceSynchronize(getDefaultStream(device))
     void syncDefaultStream(int device);
 
     /// Calls syncDefaultStream for the current device
     void syncDefaultStreamCurrentDevice();
 
     /// Calls getAlternateStreams for the current device
-    std::vector<cudaStream_t> getAlternateStreamsCurrentDevice();
+    std::vector<hipStream_t> getAlternateStreamsCurrentDevice();
 
     /// Calls getAsyncCopyStream for the current device
-    cudaStream_t getAsyncCopyStreamCurrentDevice();
+    hipStream_t getAsyncCopyStreamCurrentDevice();
 };
 
 /// Interface for a provider of a shared resources object. This is to avoid

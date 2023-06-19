@@ -8,7 +8,7 @@
 #ifndef GPU_FAISS_ASSERT_INCLUDED
 #define GPU_FAISS_ASSERT_INCLUDED
 
-#include <cuda.h>
+#include <hip/hip_runtime.h>
 #include <faiss/impl/FaissAssert.h>
 
 ///

@@ -27,7 +27,7 @@ class StandardGpuResourcesImpl : public GpuResources {
     ~StandardGpuResourcesImpl() override;
 
     /// Disable allocation of temporary memory; all temporary memory
-    /// requests will call cudaMalloc / cudaFree at the point of use
+    /// requests will call hipMalloc / hipFree at the point of use
     void noTempMemory();
 
     /// Specify that we wish to use a certain fixed size of memory on
@@ -46,7 +46,7 @@ class StandardGpuResourcesImpl : public GpuResources {
     /// up.
     /// We are guaranteed that all Faiss GPU work is ordered with respect to
     /// this stream upon exit from an index or other Faiss GPU call.
-    void setDefaultStream(int device, cudaStream_t stream) override;
+    void setDefaultStream(int device, hipStream_t stream) override;
 
     /// Revert the default stream to the original stream managed by this
     /// resources object, in case someone called `setDefaultStream`.
@@ -56,7 +56,7 @@ class StandardGpuResourcesImpl : public GpuResources {
     /// ordered.
     /// We are guaranteed that all Faiss GPU work is ordered with respect to
     /// this stream upon exit from an index or other Faiss GPU call.
-    cudaStream_t getDefaultStream(int device) override;
+    hipStream_t getDefaultStream(int device) override;
 
     /// Called to change the work ordering streams to the null stream
     /// for all devices
@@ -72,9 +72,9 @@ class StandardGpuResourcesImpl : public GpuResources {
     /// Initialize resources for this device
     void initializeForDevice(int device) override;
 
-    cublasHandle_t getBlasHandle(int device) override;
+    hipblasHandle_t getBlasHandle(int device) override;
 
-    std::vector<cudaStream_t> getAlternateStreams(int device) override;
+    std::vector<hipStream_t> getAlternateStreams(int device) override;
 
     /// Allocate non-temporary GPU memory
     void* allocMemory(const AllocRequest& req) override;
@@ -90,7 +90,7 @@ class StandardGpuResourcesImpl : public GpuResources {
 
     std::pair<void*, size_t> getPinnedMemory() override;
 
-    cudaStream_t getAsyncCopyStream(int device) override;
+    hipStream_t getAsyncCopyStream(int device) override;
 
    private:
     /// Have GPU resources been initialized for this device yet?
@@ -109,20 +109,20 @@ class StandardGpuResourcesImpl : public GpuResources {
     std::unordered_map<int, std::unique_ptr<StackDeviceMemory>> tempMemory_;
 
     /// Our default stream that work is ordered on, one per each device
-    std::unordered_map<int, cudaStream_t> defaultStreams_;
+    std::unordered_map<int, hipStream_t> defaultStreams_;
 
     /// This contains particular streams as set by the user for
     /// ordering, if any
-    std::unordered_map<int, cudaStream_t> userDefaultStreams_;
+    std::unordered_map<int, hipStream_t> userDefaultStreams_;
 
     /// Other streams we can use, per each device
-    std::unordered_map<int, std::vector<cudaStream_t>> alternateStreams_;
+    std::unordered_map<int, std::vector<hipStream_t>> alternateStreams_;
 
     /// Async copy stream to use for GPU <-> CPU pinned memory copies
-    std::unordered_map<int, cudaStream_t> asyncCopyStreams_;
+    std::unordered_map<int, hipStream_t> asyncCopyStreams_;
 
     /// cuBLAS handle for each device
-    std::unordered_map<int, cublasHandle_t> blasHandles_;
+    std::unordered_map<int, hipblasHandle_t> blasHandles_;
 
     /// Pinned memory allocation for use with this GPU
     void* pinnedMemAlloc_;
@@ -151,7 +151,7 @@ class StandardGpuResources : public GpuResourcesProvider {
     std::shared_ptr<GpuResources> getResources() override;
 
     /// Disable allocation of temporary memory; all temporary memory
-    /// requests will call cudaMalloc / cudaFree at the point of use
+    /// requests will call hipMalloc / hipFree at the point of use
     void noTempMemory();
 
     /// Specify that we wish to use a certain fixed size of memory on
@@ -170,7 +170,7 @@ class StandardGpuResources : public GpuResourcesProvider {
     /// up.
     /// We are guaranteed that all Faiss GPU work is ordered with respect to
     /// this stream upon exit from an index or other Faiss GPU call.
-    void setDefaultStream(int device, cudaStream_t stream);
+    void setDefaultStream(int device, hipStream_t stream);
 
     /// Revert the default stream to the original stream managed by this
     /// resources object, in case someone called `setDefaultStream`.
@@ -185,7 +185,7 @@ class StandardGpuResources : public GpuResourcesProvider {
             const;
 
     /// Returns the current default stream
-    cudaStream_t getDefaultStream(int device);
+    hipStream_t getDefaultStream(int device);
 
     /// Returns the current amount of temp memory available
     size_t getTempMemoryAvailable(int device) const;

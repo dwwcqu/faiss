@@ -61,15 +61,15 @@ std::string AllocRequest::toString() const {
     return ss.str();
 }
 
-AllocInfo makeDevAlloc(AllocType at, cudaStream_t st) {
+AllocInfo makeDevAlloc(AllocType at, hipStream_t st) {
     return AllocInfo(at, getCurrentDevice(), MemorySpace::Device, st);
 }
 
-AllocInfo makeTempAlloc(AllocType at, cudaStream_t st) {
+AllocInfo makeTempAlloc(AllocType at, hipStream_t st) {
     return AllocInfo(at, getCurrentDevice(), MemorySpace::Temporary, st);
 }
 
-AllocInfo makeSpaceAlloc(AllocType at, MemorySpace sp, cudaStream_t st) {
+AllocInfo makeSpaceAlloc(AllocType at, MemorySpace sp, hipStream_t st) {
     return AllocInfo(at, getCurrentDevice(), sp, st);
 }
 
@@ -83,7 +83,7 @@ GpuMemoryReservation::GpuMemoryReservation()
 GpuMemoryReservation::GpuMemoryReservation(
         GpuResources* r,
         int dev,
-        cudaStream_t str,
+        hipStream_t str,
         void* p,
         size_t sz)
         : res(r), device(dev), stream(str), data(p), size(sz) {}
@@ -145,24 +145,24 @@ GpuMemoryReservation::~GpuMemoryReservation() {
 
 GpuResources::~GpuResources() {}
 
-cublasHandle_t GpuResources::getBlasHandleCurrentDevice() {
+hipblasHandle_t GpuResources::getBlasHandleCurrentDevice() {
     return getBlasHandle(getCurrentDevice());
 }
 
-cudaStream_t GpuResources::getDefaultStreamCurrentDevice() {
+hipStream_t GpuResources::getDefaultStreamCurrentDevice() {
     return getDefaultStream(getCurrentDevice());
 }
 
-std::vector<cudaStream_t> GpuResources::getAlternateStreamsCurrentDevice() {
+std::vector<hipStream_t> GpuResources::getAlternateStreamsCurrentDevice() {
     return getAlternateStreams(getCurrentDevice());
 }
 
-cudaStream_t GpuResources::getAsyncCopyStreamCurrentDevice() {
+hipStream_t GpuResources::getAsyncCopyStreamCurrentDevice() {
     return getAsyncCopyStream(getCurrentDevice());
 }
 
 void GpuResources::syncDefaultStream(int device) {
-    CUDA_VERIFY(cudaStreamSynchronize(getDefaultStream(device)));
+    CUDA_VERIFY(hipStreamSynchronize(getDefaultStream(device)));
 }
 
 void GpuResources::syncDefaultStreamCurrentDevice() {
