@@ -24,8 +24,11 @@ option(FAISS_ENABLE_PYTHON "Build Python extension." ON)
 option(FAISS_ENABLE_C_API "Build C API." OFF)
 
 if(FAISS_ENABLE_GPU)
-  set(CMAKE_CUDA_HOST_COMPILER ${CMAKE_CXX_COMPILER})
-  enable_language(CUDA)
+  list(APPEND CMAKE_PREFIX_PATH "/opt/rocm/")
+  set(CMAKE_HIP_ARCHITECTURES "gfx906;gfx916:sramecc-")
+  set(CMAKE_CXX_COMPILER "/opt/rocm/bin/hipcc" CACHE STRING
+      "Choose the type of compiler to build: Default point to hipcc"
+      FORCE)
 endif()
 
 add_subdirectory(faiss)
