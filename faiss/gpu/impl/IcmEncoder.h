@@ -8,7 +8,7 @@
 #pragma once
 
 #include <faiss/gpu/GpuResources.h>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
+#include <faiss/gpu/utils/DeviceTensor.h>
 
 #include <random>
 

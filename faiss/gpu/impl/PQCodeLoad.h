@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/PtxUtils.cuh>
+#include <faiss/gpu/utils/PtxUtils.h>
 
 namespace faiss {
 namespace gpu {

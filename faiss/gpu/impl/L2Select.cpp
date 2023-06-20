@@ -7,16 +7,16 @@
  */
 
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/impl/L2Select.cuh>
+#include <faiss/gpu/impl/L2Select.h>
 
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/MathOperators.cuh>
-#include <faiss/gpu/utils/Pair.cuh>
-#include <faiss/gpu/utils/Reductions.cuh>
-#include <faiss/gpu/utils/Select.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/MathOperators.h>
+#include <faiss/gpu/utils/Pair.h>
+#include <faiss/gpu/utils/Reductions.h>
+#include <faiss/gpu/utils/Select.h>
+#include <faiss/gpu/utils/Tensor.h>
 
 namespace faiss {
 namespace gpu {

@@ -4,13 +4,13 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-find_package(CUDAToolkit REQUIRED)
+find_package(hip REQUIRED)
 
 # Defines `gtest_discover_tests()`.
 include(GoogleTest)
 
 add_library(faiss_gpu_test_helper TestUtils.cpp)
-target_link_libraries(faiss_gpu_test_helper PUBLIC faiss gtest CUDA::cudart)
+target_link_libraries(faiss_gpu_test_helper PUBLIC faiss gtest hip::host)
 
 macro(faiss_gpu_test file)
   get_filename_component(test_name ${file} NAME_WE)
@@ -26,11 +26,11 @@ faiss_gpu_test(TestGpuIndexBinaryFlat.cpp)
 faiss_gpu_test(TestGpuMemoryException.cpp)
 faiss_gpu_test(TestGpuIndexIVFPQ.cpp)
 faiss_gpu_test(TestGpuIndexIVFScalarQuantizer.cpp)
-faiss_gpu_test(TestGpuDistance.cu)
-faiss_gpu_test(TestGpuSelect.cu)
+faiss_gpu_test(TestGpuDistance.cpp)
+faiss_gpu_test(TestGpuSelect.cpp)
 
 add_executable(demo_ivfpq_indexing_gpu EXCLUDE_FROM_ALL
   demo_ivfpq_indexing_gpu.cpp)
 
 target_link_libraries(demo_ivfpq_indexing_gpu
-  PRIVATE faiss gtest_main CUDA::cudart)
+  PRIVATE faiss gtest_main hip::host)

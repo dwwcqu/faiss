@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/Select.cuh>
+#include <faiss/gpu/utils/Select.h>
 
 namespace faiss {
 namespace gpu {

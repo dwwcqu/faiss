@@ -8,10 +8,10 @@
 #pragma once
 
 #include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/MergeNetworkUtils.cuh>
-#include <faiss/gpu/utils/PtxUtils.cuh>
-#include <faiss/gpu/utils/WarpShuffles.cuh>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/MergeNetworkUtils.h>
+#include <faiss/gpu/utils/PtxUtils.h>
+#include <faiss/gpu/utils/WarpShuffles.h>
 
 namespace faiss {
 namespace gpu {

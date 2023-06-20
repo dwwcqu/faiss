@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/PtxUtils.cuh>
-#include <faiss/gpu/utils/WarpShuffles.cuh>
+#include <faiss/gpu/utils/PtxUtils.h>
+#include <faiss/gpu/utils/WarpShuffles.h>
 
 namespace faiss {
 namespace gpu {

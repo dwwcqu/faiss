@@ -9,10 +9,10 @@
 
 #include <hip/hip_runtime.h>
 #include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/PtxUtils.cuh>
-#include <faiss/gpu/utils/ReductionOperators.cuh>
-#include <faiss/gpu/utils/WarpShuffles.cuh>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/PtxUtils.h>
+#include <faiss/gpu/utils/ReductionOperators.h>
+#include <faiss/gpu/utils/WarpShuffles.h>
 
 namespace faiss {
 namespace gpu {

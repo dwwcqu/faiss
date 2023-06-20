@@ -9,12 +9,12 @@
 #include <faiss/MetricType.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/impl/AuxIndexStructures.h>
-#include <faiss/gpu/impl/DistanceUtils.cuh>
-#include <faiss/gpu/utils/BlockSelectKernel.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/Select.cuh>
+#include <faiss/gpu/impl/DistanceUtils.h>
+#include <faiss/gpu/utils/BlockSelectKernel.h>
+#include <faiss/gpu/utils/ConversionOperators.h>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/Select.h>
 
 #include <thrust/device_ptr.h>
 #include <thrust/execution_policy.h>
@@ -280,13 +280,13 @@ void runGeneralDistance(
     // If we're quering against a 0 sized set, just return empty results
     if (centroids.numElements() == 0) {
         thrust::fill(
-                thrust::cuda::par.on(stream),
+                thrust::hip::par.on(stream),
                 outDistances.data(),
                 outDistances.end(),
                 Limits<float>::getMax());
 
         thrust::fill(
-                thrust::cuda::par.on(stream),
+                thrust::hip::par.on(stream),
                 outIndices.data(),
                 outIndices.end(),
                 -1);

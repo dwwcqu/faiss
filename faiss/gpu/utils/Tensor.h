@@ -9,7 +9,6 @@
 
 #include <assert.h>
 #include <hip/hip_runtime.h>
-#include <hip/hip_runtime.h>
 #include <initializer_list>
 #include <vector>
 
@@ -694,4 +693,4 @@ Tensor<T, Dim, InnerContig, IndexT, PtrTraits>::operator[](IndexT index) const {
 } // namespace gpu
 } // namespace faiss
 
-#include <faiss/gpu/utils/Tensor-inl.cuh>
+#include <faiss/gpu/utils/Tensor-inl.h>

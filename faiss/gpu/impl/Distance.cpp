@@ -9,15 +9,15 @@
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/impl/AuxIndexStructures.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/impl/BroadcastSum.cuh>
-#include <faiss/gpu/impl/Distance.cuh>
-#include <faiss/gpu/impl/DistanceUtils.cuh>
-#include <faiss/gpu/impl/L2Norm.cuh>
-#include <faiss/gpu/impl/L2Select.cuh>
-#include <faiss/gpu/utils/BlockSelectKernel.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/Limits.cuh>
-#include <faiss/gpu/utils/MatrixMult.cuh>
+#include <faiss/gpu/impl/BroadcastSum.h>
+#include <faiss/gpu/impl/Distance.h>
+#include <faiss/gpu/impl/DistanceUtils.h>
+#include <faiss/gpu/impl/L2Norm.h>
+#include <faiss/gpu/impl/L2Select.h>
+#include <faiss/gpu/utils/BlockSelectKernel.h>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/Limits.h>
+#include <faiss/gpu/utils/MatrixMult.h>
 
 #include <thrust/device_ptr.h>
 #include <thrust/execution_policy.h>

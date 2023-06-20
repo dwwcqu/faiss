@@ -9,10 +9,10 @@
 #include <faiss/gpu/GpuResources.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/impl/Distance.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
+#include <faiss/gpu/impl/Distance.h>
+#include <faiss/gpu/utils/ConversionOperators.h>
+#include <faiss/gpu/utils/CopyUtils.h>
+#include <faiss/gpu/utils/DeviceTensor.h>
 
 namespace faiss {
 namespace gpu {

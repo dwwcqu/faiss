@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/gpu/utils/Float16.h>
 
 #ifndef __HALF2_TO_UI
 // cuda_fp16.hpp doesn't export this
@@ -38,7 +38,7 @@ template <>
 struct LoadStore<Half4> {
     static inline __device__ Half4 load(void* p) {
         Half4 out;
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
     #if CUDA_VERSION >= 9000
             asm("ld.global.v2.u32 {%0, %1}, [%2];"
                 : "=r"(__HALF2_TO_UI(out.a)), "=r"(__HALF2_TO_UI(out.b))
@@ -57,7 +57,7 @@ struct LoadStore<Half4> {
     }
 
     static inline __device__ void store(void* p, Half4& v) {
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if CUDA_VERSION >= 9000
         asm("st.v2.u32 [%0], {%1, %2};"
             :
@@ -75,7 +75,7 @@ template <>
 struct LoadStore<Half8> {
     static inline __device__ Half8 load(void* p) {
         Half8 out;
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if CUDA_VERSION >= 9000
         asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
             : "=r"(__HALF2_TO_UI(out.a.a)),
@@ -97,7 +97,7 @@ struct LoadStore<Half8> {
     }
 
     static inline __device__ void store(void* p, Half8& v) {
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if CUDA_VERSION >= 9000
         asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
             :

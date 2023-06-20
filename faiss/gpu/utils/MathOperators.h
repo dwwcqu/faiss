@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/gpu/utils/ConversionOperators.h>
+#include <faiss/gpu/utils/Float16.h>
 
 //
 // Templated wrappers to express math for different scalar and vector
@@ -282,7 +282,7 @@ struct Math<half> {
     }
 
     static inline __device__ half zero() {
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if CUDA_VERSION >= 9000
         return 0;
 #else
@@ -291,9 +291,9 @@ struct Math<half> {
         return h;
 #endif
 #else
-    half h;
+    __half_raw h;
     h.x = 0;
-    return h;
+    return __half(h);
 #endif
     }
 };

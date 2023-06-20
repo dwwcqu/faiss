@@ -8,11 +8,11 @@
 #pragma once
 
 #include <faiss/IndexScalarQuantizer.h>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
-#include <faiss/gpu/utils/PtxUtils.cuh>
-#include <faiss/gpu/utils/WarpShuffles.cuh>
+#include <faiss/gpu/utils/ConversionOperators.h>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/HostTensor.h>
+#include <faiss/gpu/utils/PtxUtils.h>
+#include <faiss/gpu/utils/WarpShuffles.h>
 
 namespace faiss {
 namespace gpu {

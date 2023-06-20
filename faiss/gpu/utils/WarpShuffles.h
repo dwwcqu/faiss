@@ -14,7 +14,7 @@ namespace faiss {
 namespace gpu {
 
 // defines to simplify the SASS assembly structure file/line in the profiler
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if CUDA_VERSION >= 9000
 #define SHFL_SYNC(VAL, SRC_LANE, WIDTH) \
     __shfl_sync(0xffffffff, VAL, SRC_LANE, WIDTH)
@@ -27,7 +27,7 @@ namespace gpu {
 
 template <typename T>
 inline __device__ T shfl(const T val, int srcLane, int width = kWarpSize) {
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if CUDA_VERSION >= 9000
     return __shfl_sync(0xffffffff, val, srcLane, width);
 #else
@@ -50,7 +50,7 @@ inline __device__ T* shfl(T* const val, int srcLane, int width = kWarpSize) {
 template <typename T>
 inline __device__ T
 shfl_up(const T val, unsigned int delta, int width = kWarpSize) {
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if CUDA_VERSION >= 9000
     return __shfl_up_sync(0xffffffff, val, delta, width);
 #else
@@ -76,7 +76,7 @@ inline __device__ T* shfl_up(
 template <typename T>
 inline __device__ T
 shfl_down(const T val, unsigned int delta, int width = kWarpSize) {
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if CUDA_VERSION >= 9000
     return __shfl_down_sync(0xffffffff, val, delta, width);
 #else
@@ -100,7 +100,7 @@ inline __device__ T* shfl_down(
 
 template <typename T>
 inline __device__ T shfl_xor(const T val, int laneMask, int width = kWarpSize) {
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if CUDA_VERSION >= 9000
     return __shfl_xor_sync(0xffffffff, val, laneMask, width);
 #else
@@ -123,7 +123,7 @@ inline __device__ T* shfl_xor(
 }
 
 // CUDA 9.0+ has half shuffle
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if CUDA_VERSION < 9000
 inline __device__ half shfl(half v, int srcLane, int width = kWarpSize) {
     unsigned int vu = v.x;
@@ -145,19 +145,19 @@ inline __device__ half shfl_xor(half v, int laneMask, int width = kWarpSize) {
 #endif // CUDA_VERSION
 #else
     inline __device__ half shfl(half v, int srcLane, int width = kWarpSize) {
-    unsigned int vu = v.x;
+    unsigned int vu = ((__half_raw)v).x;
     vu = __shfl(vu, srcLane, width);
 
-    half h;
+    __half_raw h;
     h.x = (unsigned short)vu;
     return h;
 }
 
 inline __device__ half shfl_xor(half v, int laneMask, int width = kWarpSize) {
-    unsigned int vu = v.x;
+    unsigned int vu = static_cast<__half_raw>(v).x;
     vu = __shfl_xor(vu, laneMask, width);
 
-    half h;
+    __half_raw h;
     h.x = (unsigned short)vu;
     return h;
 }

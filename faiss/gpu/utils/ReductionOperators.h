@@ -8,9 +8,9 @@
 #pragma once
 
 #include <hip/hip_runtime.h>
-#include <faiss/gpu/utils/Limits.cuh>
-#include <faiss/gpu/utils/MathOperators.cuh>
-#include <faiss/gpu/utils/Pair.cuh>
+#include <faiss/gpu/utils/Limits.h>
+#include <faiss/gpu/utils/MathOperators.h>
+#include <faiss/gpu/utils/Pair.h>
 
 namespace faiss {
 namespace gpu {

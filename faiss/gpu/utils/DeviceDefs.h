@@ -13,7 +13,7 @@ namespace faiss {
 namespace gpu {
 
 // We require at least CUDA 8.0 for compilation
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
     #if CUDA_VERSION < 8000
     #error "CUDA >= 8.0 is required"
     #endif
@@ -24,7 +24,7 @@ constexpr int kWarpSize = 32;
 
 // This is a memory barrier for intra-warp writes to shared memory.
 __forceinline__ __device__ void warpFence() {
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
     #if CUDA_VERSION >= 9000
         __syncwarp();
     #else
@@ -33,7 +33,7 @@ __forceinline__ __device__ void warpFence() {
     #endif
 #endif
 }
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
     #if CUDA_VERSION > 9000
     // Based on the CUDA version (we assume what version of nvcc/ptxas we were
     // compiled with), the register allocation algorithm is much better, so only
@@ -42,6 +42,8 @@ __forceinline__ __device__ void warpFence() {
     #else
     #define GPU_MAX_SELECTION_K 1024
     #endif
+#else
+    #define GPU_MAX_SELECTION_K 1024
 #endif
 } // namespace gpu
 } // namespace faiss

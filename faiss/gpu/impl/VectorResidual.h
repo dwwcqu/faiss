@@ -8,7 +8,7 @@
 #pragma once
 
 #include <faiss/Index.h>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/gpu/utils/Tensor.h>
 
 namespace faiss {
 namespace gpu {

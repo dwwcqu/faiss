@@ -8,11 +8,11 @@
 
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/impl/IVFUtils.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/Limits.cuh>
-#include <faiss/gpu/utils/Select.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/gpu/impl/IVFUtils.h>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/Limits.h>
+#include <faiss/gpu/utils/Select.h>
+#include <faiss/gpu/utils/Tensor.h>
 
 //
 // This kernel is split into a separate compilation unit to cut down

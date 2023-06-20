@@ -10,7 +10,7 @@
 
 #include <algorithm>
 
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/gpu/utils/Tensor.h>
 
 //
 // Shared utilities for brute-force distance calculations

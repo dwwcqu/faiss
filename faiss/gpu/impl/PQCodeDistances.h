@@ -9,8 +9,8 @@
 
 #include <hipblas.h>
 #include <faiss/Index.h>
-#include <faiss/gpu/utils/NoTypeTensor.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/gpu/utils/NoTypeTensor.h>
+#include <faiss/gpu/utils/Tensor.h>
 
 namespace faiss {
 namespace gpu {
@@ -37,4 +37,4 @@ void runPQCodeDistances(
 } // namespace gpu
 } // namespace faiss
 
-#include <faiss/gpu/impl/PQCodeDistances-inl.cuh>
+#include <faiss/gpu/impl/PQCodeDistances-inl.h>

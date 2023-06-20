@@ -7,8 +7,8 @@
 
 #include <faiss/gpu/GpuResources.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/impl/BinaryDistance.cuh>
-#include <faiss/gpu/impl/BinaryFlatIndex.cuh>
+#include <faiss/gpu/impl/BinaryDistance.h>
+#include <faiss/gpu/impl/BinaryFlatIndex.h>
 
 namespace faiss {
 namespace gpu {

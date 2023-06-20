@@ -15,8 +15,8 @@
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/gpu/utils/Timer.h>
 #include <gflags/gflags.h>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/HostTensor.h>
 #include <map>
 #include <memory>
 #include <vector>

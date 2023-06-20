@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include <faiss/gpu/impl/GpuScalarQuantizer.cuh>
-#include <faiss/gpu/impl/IVFBase.cuh>
+#include <faiss/gpu/impl/GpuScalarQuantizer.h>
+#include <faiss/gpu/impl/IVFBase.h>
 
 namespace faiss {
 namespace gpu {

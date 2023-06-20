@@ -8,8 +8,8 @@
 #pragma once
 
 #include <faiss/MetricType.h>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/Float16.h>
 
 #include <hip/hip_runtime.h>
 #include <thrust/execution_policy.h>
@@ -110,7 +110,7 @@ struct ConvertTo<Half4> {
 template <typename From, typename To>
 void runConvert(const From* in, To* out, size_t num, hipStream_t stream) {
     thrust::transform(
-            thrust::cuda::par.on(stream),
+            thrust::hip::par.on(stream),
             in,
             in + num,
             out,

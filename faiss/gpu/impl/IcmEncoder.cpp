@@ -6,17 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/impl/IcmEncoder.cuh>
+#include <faiss/gpu/impl/IcmEncoder.h>
 
 #include <faiss/gpu/GpuResources.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/impl/L2Norm.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/MatrixMult.cuh>
-#include <faiss/gpu/utils/Pair.cuh>
-#include <faiss/gpu/utils/Reductions.cuh>
+#include <faiss/gpu/impl/L2Norm.h>
+#include <faiss/gpu/utils/CopyUtils.h>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/MatrixMult.h>
+#include <faiss/gpu/utils/Pair.h>
+#include <faiss/gpu/utils/Reductions.h>
 
 #include <hiprand_kernel.h>
 

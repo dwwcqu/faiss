@@ -13,8 +13,8 @@
 #include <faiss/gpu/impl/IndexUtils.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/impl/IVFBase.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
+#include <faiss/gpu/impl/IVFBase.h>
+#include <faiss/gpu/utils/CopyUtils.h>
 
 namespace faiss {
 namespace gpu {

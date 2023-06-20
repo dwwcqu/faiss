@@ -11,8 +11,8 @@
 #include <faiss/gpu/test/TestUtils.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <gtest/gtest.h>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/Transpose.cuh>
+#include <faiss/gpu/utils/CopyUtils.h>
+#include <faiss/gpu/utils/Transpose.h>
 #include <sstream>
 #include <vector>
 

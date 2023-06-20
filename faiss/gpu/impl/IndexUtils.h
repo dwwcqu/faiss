@@ -15,7 +15,7 @@ namespace gpu {
 /// A collection of various utility functions for index implementation
 
 /// Returns the maximum k-selection value supported based on the CUDA SDK that
-/// we were compiled with. .cu files can use DeviceDefs.cuh, but this is for
+/// we were compiled with. .cpp files can use DeviceDefs.h, but this is for
 /// non-CUDA files
 int getMaxKSelection();
 

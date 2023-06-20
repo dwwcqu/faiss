@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <faiss/gpu/impl/scan/IVFInterleavedImpl.cuh>
+#include <faiss/gpu/impl/scan/IVFInterleavedImpl.h>
 
 namespace faiss {
 namespace gpu {

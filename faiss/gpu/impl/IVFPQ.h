@@ -9,8 +9,8 @@
 
 #include <faiss/Index.h>
 #include <faiss/MetricType.h>
-#include <faiss/gpu/impl/IVFBase.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/gpu/impl/IVFBase.h>
+#include <faiss/gpu/utils/Float16.h>
 
 namespace faiss {
 namespace gpu {

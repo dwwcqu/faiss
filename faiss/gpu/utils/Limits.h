@@ -33,7 +33,7 @@ struct Limits<float> {
 };
 
 inline __device__ __host__ half kGetHalf(unsigned short v) {
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if CUDA_VERSION >= 9000
     __half_raw h;
     h.x = v;
@@ -44,9 +44,9 @@ inline __device__ __host__ half kGetHalf(unsigned short v) {
     return h;
 #endif
 #else
-    half h;
+    __half_raw h;
     h.x = v;
-    return h;
+    return __half(h);
 #endif
 }
 

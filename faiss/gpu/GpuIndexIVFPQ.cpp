@@ -12,8 +12,8 @@
 #include <faiss/gpu/GpuResources.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/utils/utils.h>
-#include <faiss/gpu/impl/IVFPQ.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
+#include <faiss/gpu/impl/IVFPQ.h>
+#include <faiss/gpu/utils/CopyUtils.h>
 
 #include <limits>
 

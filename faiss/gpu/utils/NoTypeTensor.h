@@ -8,7 +8,7 @@
 #pragma once
 
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/gpu/utils/Tensor.h>
 #include <initializer_list>
 
 namespace faiss {

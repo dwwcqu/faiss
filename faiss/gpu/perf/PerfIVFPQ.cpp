@@ -14,8 +14,8 @@
 #include <faiss/gpu/test/TestUtils.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/gpu/utils/Timer.h>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/HostTensor.h>
 
 #include <hip/hip_profile.h>
 #include <gflags/gflags.h>

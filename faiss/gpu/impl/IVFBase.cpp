@@ -12,13 +12,13 @@
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/invlists/InvertedLists.h>
 #include <thrust/host_vector.h>
-#include <faiss/gpu/impl/FlatIndex.cuh>
-#include <faiss/gpu/impl/IVFAppend.cuh>
-#include <faiss/gpu/impl/IVFBase.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
-#include <faiss/gpu/utils/ThrustUtils.cuh>
+#include <faiss/gpu/impl/FlatIndex.h>
+#include <faiss/gpu/impl/IVFAppend.h>
+#include <faiss/gpu/impl/IVFBase.h>
+#include <faiss/gpu/utils/CopyUtils.h>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/HostTensor.h>
+#include <faiss/gpu/utils/ThrustUtils.h>
 #include <limits>
 #include <unordered_map>
 

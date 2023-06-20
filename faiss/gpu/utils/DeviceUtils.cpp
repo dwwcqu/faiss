@@ -8,7 +8,7 @@
 #include <hip/hip_profile.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
+#include <faiss/gpu/utils/DeviceDefs.h>
 #include <mutex>
 #include <unordered_map>
 
@@ -113,7 +113,7 @@ int getDeviceForAddress(const void* p) {
                 err == hipErrorInvalidValue, "unknown error %d", (int)err);
         return -1;
     }
-#ifdef __HIP_PLATFORM_NVCC__
+#ifdef __HIP_PLATFORM_NVIDIA__
     // memoryType is deprecated for CUDA 10.0+
 #if CUDA_VERSION < 10000
     if (att.memoryType == hipMemoryTypeHost) {

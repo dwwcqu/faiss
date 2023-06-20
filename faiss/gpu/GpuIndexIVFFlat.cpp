@@ -11,9 +11,9 @@
 #include <faiss/gpu/GpuIndexIVFFlat.h>
 #include <faiss/gpu/GpuResources.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/impl/IVFFlat.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/gpu/impl/IVFFlat.h>
+#include <faiss/gpu/utils/CopyUtils.h>
+#include <faiss/gpu/utils/Float16.h>
 
 #include <limits>
 

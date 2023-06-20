@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <faiss/gpu/impl/IVFInterleaved.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceVector.cuh>
+#include <faiss/gpu/impl/IVFInterleaved.h>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/DeviceVector.h>
 
 #define IVF_INTERLEAVED_IMPL(THREADS, WARP_Q, THREAD_Q) \
                                                         \

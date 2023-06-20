@@ -8,7 +8,7 @@
 #pragma once
 
 #include <hip/hip_runtime.h>
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/gpu/utils/Float16.h>
 
 namespace faiss {
 namespace gpu {

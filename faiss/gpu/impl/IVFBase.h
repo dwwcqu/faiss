@@ -10,8 +10,8 @@
 #include <faiss/Index.h>
 #include <faiss/MetricType.h>
 #include <faiss/gpu/GpuIndicesOptions.h>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/DeviceVector.cuh>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/DeviceVector.h>
 #include <memory>
 #include <vector>
 

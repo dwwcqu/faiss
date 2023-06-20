@@ -10,11 +10,11 @@
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <gtest/gtest.h>
 #include <algorithm>
-#include <faiss/gpu/utils/BlockSelectKernel.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
-#include <faiss/gpu/utils/WarpSelectKernel.cuh>
+#include <faiss/gpu/utils/BlockSelectKernel.h>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/HostTensor.h>
+#include <faiss/gpu/utils/WarpSelectKernel.h>
 #include <sstream>
 #include <unordered_map>
 #include <vector>

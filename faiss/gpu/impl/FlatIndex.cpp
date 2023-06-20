@@ -6,13 +6,13 @@
  */
 
 #include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/impl/Distance.cuh>
-#include <faiss/gpu/impl/FlatIndex.cuh>
-#include <faiss/gpu/impl/L2Norm.cuh>
-#include <faiss/gpu/impl/VectorResidual.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/Transpose.cuh>
+#include <faiss/gpu/impl/Distance.h>
+#include <faiss/gpu/impl/FlatIndex.h>
+#include <faiss/gpu/impl/L2Norm.h>
+#include <faiss/gpu/impl/VectorResidual.h>
+#include <faiss/gpu/utils/ConversionOperators.h>
+#include <faiss/gpu/utils/CopyUtils.h>
+#include <faiss/gpu/utils/Transpose.h>
 
 namespace faiss {
 namespace gpu {

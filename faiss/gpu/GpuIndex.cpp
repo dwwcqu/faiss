@@ -15,7 +15,7 @@
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/gpu/utils/StaticUtils.h>
 #include <faiss/impl/FaissAssert.h>
-#include <faiss/gpu/utils/CopyUtils.cuh>
+#include <faiss/gpu/utils/CopyUtils.h>
 
 #include <algorithm>
 #include <limits>

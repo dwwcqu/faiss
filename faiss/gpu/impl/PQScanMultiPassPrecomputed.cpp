@@ -9,15 +9,15 @@
 #include <faiss/gpu/GpuResources.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/impl/IVFUtils.cuh>
-#include <faiss/gpu/impl/PQCodeLoad.cuh>
-#include <faiss/gpu/impl/PQScanMultiPassPrecomputed.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
-#include <faiss/gpu/utils/LoadStoreOperators.cuh>
-#include <faiss/gpu/utils/MathOperators.cuh>
-#include <faiss/gpu/utils/WarpPackedBits.cuh>
+#include <faiss/gpu/impl/IVFUtils.h>
+#include <faiss/gpu/impl/PQCodeLoad.h>
+#include <faiss/gpu/impl/PQScanMultiPassPrecomputed.h>
+#include <faiss/gpu/utils/ConversionOperators.h>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/Float16.h>
+#include <faiss/gpu/utils/LoadStoreOperators.h>
+#include <faiss/gpu/utils/MathOperators.h>
+#include <faiss/gpu/utils/WarpPackedBits.h>
 
 #include <algorithm>
 #include <limits>

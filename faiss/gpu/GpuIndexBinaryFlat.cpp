@@ -10,9 +10,9 @@
 #include <faiss/gpu/GpuResources.h>
 #include <faiss/gpu/impl/IndexUtils.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/impl/BinaryFlatIndex.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
+#include <faiss/gpu/impl/BinaryFlatIndex.h>
+#include <faiss/gpu/utils/ConversionOperators.h>
+#include <faiss/gpu/utils/CopyUtils.h>
 
 namespace faiss {
 namespace gpu {

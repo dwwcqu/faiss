@@ -11,10 +11,10 @@
 #include <faiss/gpu/impl/IndexUtils.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/impl/FlatIndex.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/CopyUtils.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/gpu/impl/FlatIndex.h>
+#include <faiss/gpu/utils/ConversionOperators.h>
+#include <faiss/gpu/utils/CopyUtils.h>
+#include <faiss/gpu/utils/Float16.h>
 #include <limits>
 
 namespace faiss {

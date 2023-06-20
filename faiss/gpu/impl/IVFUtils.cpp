@@ -10,9 +10,9 @@
 #include <faiss/gpu/utils/StaticUtils.h>
 #include <thrust/execution_policy.h>
 #include <thrust/scan.h>
-#include <faiss/gpu/impl/IVFUtils.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
-#include <faiss/gpu/utils/ThrustUtils.cuh>
+#include <faiss/gpu/impl/IVFUtils.h>
+#include <faiss/gpu/utils/Tensor.h>
+#include <faiss/gpu/utils/ThrustUtils.h>
 
 #include <algorithm>
 

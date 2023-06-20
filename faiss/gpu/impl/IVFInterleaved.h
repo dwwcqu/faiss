@@ -13,18 +13,18 @@
 #include <faiss/gpu/GpuResources.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/gpu/utils/StaticUtils.h>
-#include <faiss/gpu/impl/DistanceUtils.cuh>
-#include <faiss/gpu/impl/GpuScalarQuantizer.cuh>
-#include <faiss/gpu/utils/Comparators.cuh>
-#include <faiss/gpu/utils/ConversionOperators.cuh>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/DeviceVector.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
-#include <faiss/gpu/utils/MathOperators.cuh>
-#include <faiss/gpu/utils/PtxUtils.cuh>
-#include <faiss/gpu/utils/Select.cuh>
-#include <faiss/gpu/utils/WarpPackedBits.cuh>
+#include <faiss/gpu/impl/DistanceUtils.h>
+#include <faiss/gpu/impl/GpuScalarQuantizer.h>
+#include <faiss/gpu/utils/Comparators.h>
+#include <faiss/gpu/utils/ConversionOperators.h>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/DeviceVector.h>
+#include <faiss/gpu/utils/Float16.h>
+#include <faiss/gpu/utils/MathOperators.h>
+#include <faiss/gpu/utils/PtxUtils.h>
+#include <faiss/gpu/utils/Select.h>
+#include <faiss/gpu/utils/WarpPackedBits.h>
 
 namespace faiss {
 namespace gpu {

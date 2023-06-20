@@ -8,10 +8,10 @@
 #pragma once
 
 #include <hipblas.h>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
-#include <faiss/gpu/utils/HostTensor.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/Float16.h>
+#include <faiss/gpu/utils/HostTensor.h>
+#include <faiss/gpu/utils/Tensor.h>
 
 namespace faiss {
 namespace gpu {
@@ -52,4 +52,4 @@ void runIteratedMatrixMult(
 } // namespace gpu
 } // namespace faiss
 
-#include <faiss/gpu/utils/MatrixMult-inl.cuh>
+#include <faiss/gpu/utils/MatrixMult-inl.h>

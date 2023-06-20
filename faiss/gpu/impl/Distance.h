@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <faiss/gpu/impl/GeneralDistance.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/Float16.cuh>
+#include <faiss/gpu/impl/GeneralDistance.h>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/Float16.h>
 
 namespace faiss {
 namespace gpu {

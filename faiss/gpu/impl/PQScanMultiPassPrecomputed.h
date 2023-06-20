@@ -9,9 +9,9 @@
 
 #include <faiss/Index.h>
 #include <faiss/gpu/GpuIndicesOptions.h>
-#include <faiss/gpu/utils/DeviceVector.cuh>
-#include <faiss/gpu/utils/NoTypeTensor.cuh>
-#include <faiss/gpu/utils/Tensor.cuh>
+#include <faiss/gpu/utils/DeviceVector.h>
+#include <faiss/gpu/utils/NoTypeTensor.h>
+#include <faiss/gpu/utils/Tensor.h>
 
 namespace faiss {
 namespace gpu {

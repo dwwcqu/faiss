@@ -7,9 +7,9 @@
  */
 
 #include <faiss/gpu/utils/DeviceUtils.h>
-#include <faiss/gpu/utils/DeviceDefs.cuh>
-#include <faiss/gpu/utils/DeviceTensor.cuh>
-#include <faiss/gpu/utils/Select.cuh>
+#include <faiss/gpu/utils/DeviceDefs.h>
+#include <faiss/gpu/utils/DeviceTensor.h>
+#include <faiss/gpu/utils/Select.h>
 
 namespace faiss {
 namespace gpu {
