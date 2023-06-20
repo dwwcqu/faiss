@@ -90,6 +90,7 @@ subdirectory.
 
 Several options can be passed to CMake, among which:
 - general options:
+  - `-DCMAKE_CXX_COMPIER=/path/to/hipcc` in order to set the HIPCC compiler,
   - `-DFAISS_ENABLE_GPU=OFF` in order to disable building GPU indices (possible
   values are `ON` and `OFF`),
   - `-DFAISS_ENABLE_PYTHON=OFF` in order to disable building python bindings
@@ -115,6 +116,10 @@ Several options can be passed to CMake, among which:
   - `-DCMAKE_CUDA_ARCHITECTURES="75;72"` for specifying which GPU architectures
   to build against (see [CUDA docs](https://developer.nvidia.com/cuda-gpus) to
   determine which architecture(s) you should pick),
+  - `-DCMAKE_HIP_COMPILER_ROCM_ROOT:PATH=/path/to/rocm` in order to hint the path of
+  the ROCm toolkit,
+  - `-DCMAKE_HIP_ARCHITECTURES="gfx906;gfx916"` for specifying which GPU architectures
+  to build against,
 - python-related options:
   - `-DPython_EXECUTABLE=/path/to/python3.7` in order to build a python
   interface for a different python than the default one (see
