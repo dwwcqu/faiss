@@ -120,7 +120,7 @@ hipblasStatus_t rawGemm(
                 C,
                 HIPBLAS_R_32F,
                 ldc,
-                CUBLAS_COMPUTE_32F_PEDANTIC,
+                HIPBLAS_R_32F,
                 HIPBLAS_GEMM_DEFAULT);
     }
 #endif

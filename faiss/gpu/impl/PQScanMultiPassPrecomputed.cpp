@@ -344,7 +344,7 @@ void runMultiPassTile(
 
 #define RUN_INTERLEAVED(BITS_PER_CODE, CODE_DIST_T)                       \
     do {                                                                  \
-        pqScanPrecomputedInterleaved<uint8_t, BITS_PER_CODE, CODE_DIST_T> \
+        HIP_KERNEL_NAME(pqScanPrecomputedInterleaved<uint8_t, BITS_PER_CODE, CODE_DIST_T>) \
                 <<<grid, block, 0, stream>>>(                             \
                         queries,                                          \
                         precompTerm1,                                     \

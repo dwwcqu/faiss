@@ -9,7 +9,11 @@
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/gpu/utils/StaticUtils.h>
 #include <faiss/impl/FaissAssert.h>
+#ifdef __HIP_PLATFORM_NVIDIA__
 #include <math_constants.h> // in CUDA SDK, for CUDART_NAN_F
+#else
+#define CUDART_NAN_F (float)(0x7fffffffU)
+#endif
 #include <faiss/gpu/impl/VectorResidual.h>
 #include <faiss/gpu/utils/ConversionOperators.h>
 #include <faiss/gpu/utils/Tensor.h>

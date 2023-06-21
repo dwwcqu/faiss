@@ -58,7 +58,7 @@ void runAllPairwiseDistance(
     // If we're querying against a 0 sized set, just return empty results
     if (centroids.numElements() == 0) {
         thrust::fill(
-                thrust::cuda::par.on(stream),
+                thrust::hip::par.on(stream),
                 outDistances.data(),
                 outDistances.end(),
                 Limits<float>::getMax());
@@ -150,13 +150,13 @@ void runDistance(
     // If we're querying against a 0 sized set, just return empty results
     if (centroids.numElements() == 0) {
         thrust::fill(
-                thrust::cuda::par.on(stream),
+                thrust::hip::par.on(stream),
                 outDistances.data(),
                 outDistances.end(),
                 Limits<float>::getMax());
 
         thrust::fill(
-                thrust::cuda::par.on(stream),
+                thrust::hip::par.on(stream),
                 outIndices.data(),
                 outIndices.end(),
                 -1);

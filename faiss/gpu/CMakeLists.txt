@@ -37,7 +37,7 @@ set(FAISS_GPU_SRC
   impl/InterleavedCodes.cpp
   impl/L2Norm.cpp
   impl/L2Select.cpp
-  impl/PQScanMultiPassPrecomputed.cpp
+  # impl/PQScanMultiPassPrecomputed.cpp
   impl/RemapIndices.cpp
   impl/VectorResidual.cpp
   impl/scan/IVFInterleaved1.cpp

@@ -14,24 +14,34 @@ namespace gpu {
 
 // defines to simplify the SASS assembly structure file/line in the profiler
 #define GET_BITFIELD_U32(OUT, VAL, POS, LEN) \
-    asm volatile ("S_BFE_U32 %0, %1, %2, %3;" : "=r"(OUT) : "r"(VAL), "r"(POS), "r"(LEN));
+    OUT = VAL; \
+    asm volatile ("V_BFE_U32 %0, %1, %2, %3;" :"=r"(OUT) : "0"(OUT), "r"(POS), "r"(LEN)); \
 
 #define GET_BITFIELD_U64(OUT, VAL, POS, LEN) \
-    asm volatile ("S_BFE_U64 %0, %1, %2, %3;" : "=r"(OUT) : "r"(VAL), "r"(POS), "r"(LEN));
+    OUT = VAL; \
+    asm volatile ("V_BFE_U64 %0, %1, %2, %3;" : "=r"(OUT) : "0"(OUT), "r"(POS), "r"(LEN));
+
+#ifdef __HIP_PLATFORM_NVIDIA__
+#define WAVE_SIZE 32
+#else
+#define WAVE_SIZE 64
+#endif
 
 __device__ __forceinline__ unsigned int getBitfield(
         unsigned int val,
         int pos,
         int len) {
     unsigned int ret;
-    asm("S_BFE_U32 %0, %1, %2, %3;" : "=r"(ret) : "r"(val), "r"(pos), "r"(len));
+    asm volatile ("V_BFE_U32 %0, %1, %2, %3;" : "=r"(val) : "0"(val), "r"(pos), "r"(len));
+    ret = val;
     return ret;
 }
 
 __device__ __forceinline__ uint64_t
 getBitfield(uint64_t val, int pos, int len) {
     uint64_t ret;
-    asm("S_BFE_U64 %0, %1, %2, %3;" : "=r"(ret) : "r"(val), "r"(pos), "r"(len));
+    asm volatile ("V_BFE_U64 %0, %1, %2, %3;" : "=r"(val) : "0"(val), "r"(pos), "r"(len));
+    ret = val;
     return ret;
 }
 
@@ -41,15 +51,17 @@ __device__ __forceinline__ unsigned int setBitfield(
         int pos,
         int len) {
     unsigned int ret;
-    agusm("bfi.b32 %0, %1, %2, %3, %4;"
-        : "=r"(ret)
+    asm("V_BFI_B32 %0, %1, %3, %4;"
+        : "=r"(val)
         : "r"(toInsert), "r"(val), "r"(pos), "r"(len));
+    ret = val;
     return ret;
 }
 
 __device__ __forceinline__ int getLaneId() {
     int laneId;
-    asm("mov.u32 %0, %%laneid;" : "=r"(laneId));
+    int block_id = (blockDim.x * blockDim.y * threadIdx.x + blockDim.x * threadIdx.y + threadIdx.x);
+    laneId = block_id % WAVE_SIZE;
     return laneId;
 }
 

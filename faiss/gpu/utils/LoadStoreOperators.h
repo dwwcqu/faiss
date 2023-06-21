@@ -42,16 +42,16 @@ struct LoadStore<Half4> {
     #if CUDA_VERSION >= 9000
             asm("ld.global.v2.u32 {%0, %1}, [%2];"
                 : "=r"(__HALF2_TO_UI(out.a)), "=r"(__HALF2_TO_UI(out.b))
-                : "l"(p));
+                : "r"(p));
     #else
             asm("ld.global.v2.u32 {%0, %1}, [%2];"
                 : "=r"(out.a.x), "=r"(out.b.x)
-                : "l"(p));
+                : "r"(p));
     #endif
 #else
     asm("ld.global.v2.u32 {%0, %1}, [%2];"
                 : "=r"(out.a.x), "=r"(out.b.x)
-                : "l"(p));
+                : "r"(p));
 #endif
         return out;
     }
@@ -61,12 +61,12 @@ struct LoadStore<Half4> {
 #if CUDA_VERSION >= 9000
         asm("st.v2.u32 [%0], {%1, %2};"
             :
-            : "l"(p), "r"(__HALF2_TO_UI(v.a)), "r"(__HALF2_TO_UI(v.b)));
+            : "r"(p), "r"(__HALF2_TO_UI(v.a)), "r"(__HALF2_TO_UI(v.b)));
 #else
-        asm("st.v2.u32 [%0], {%1, %2};" : : "l"(p), "r"(v.a.x), "r"(v.b.x));
+        asm("st.v2.u32 [%0], {%1, %2};" : : "r"(p), "r"(v.a.x), "r"(v.b.x));
 #endif
 #else
-    asm("st.v2.u32 [%0], {%1, %2};" : : "l"(p), "r"(v.a.x), "r"(v.b.x));
+    asm("st.v2.u32 [%0], {%1, %2};" : : "r"(p), "r"(v.a.x), "r"(v.b.x));
 #endif
     }
 };
@@ -82,16 +82,16 @@ struct LoadStore<Half8> {
               "=r"(__HALF2_TO_UI(out.a.b)),
               "=r"(__HALF2_TO_UI(out.b.a)),
               "=r"(__HALF2_TO_UI(out.b.b))
-            : "l"(p));
+            : "r"(p));
 #else
         asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
             : "=r"(out.a.a.x), "=r"(out.a.b.x), "=r"(out.b.a.x), "=r"(out.b.b.x)
-            : "l"(p));
+            : "r"(p));
 #endif
 #else
     asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
             : "=r"(out.a.a.x), "=r"(out.a.b.x), "=r"(out.b.a.x), "=r"(out.b.b.x)
-            : "l"(p));
+            : "r"(p));
 #endif
         return out;
     }
@@ -101,7 +101,7 @@ struct LoadStore<Half8> {
 #if CUDA_VERSION >= 9000
         asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
             :
-            : "l"(p),
+            : "r"(p),
               "r"(__HALF2_TO_UI(v.a.a)),
               "r"(__HALF2_TO_UI(v.a.b)),
               "r"(__HALF2_TO_UI(v.b.a)),
@@ -109,12 +109,12 @@ struct LoadStore<Half8> {
 #else
         asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
             :
-            : "l"(p), "r"(v.a.a.x), "r"(v.a.b.x), "r"(v.b.a.x), "r"(v.b.b.x));
+            : "r"(p), "r"(v.a.a.x), "r"(v.a.b.x), "r"(v.b.a.x), "r"(v.b.b.x));
 #endif
 #else
     asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
             :
-            : "l"(p), "r"(v.a.a.x), "r"(v.a.b.x), "r"(v.b.a.x), "r"(v.b.b.x));
+            : "r"(p), "r"(v.a.a.x), "r"(v.a.b.x), "r"(v.b.a.x), "r"(v.b.b.x));
 #endif
     }
 };

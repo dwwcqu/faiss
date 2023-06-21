@@ -8,7 +8,9 @@
 #pragma once
 
 #include <faiss/gpu/utils/Tensor.h>
-
+#ifdef __HIP_PLATFORM_AMD__
+#include <hip/amd_detail/amd_hip_fp16.h>
+#endif
 namespace faiss {
 namespace gpu {
 

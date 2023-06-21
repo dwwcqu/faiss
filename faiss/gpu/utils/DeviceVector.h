@@ -137,7 +137,7 @@ class DeviceVector {
     void setAll(const T& value, hipStream_t stream) {
         if (num_ > 0) {
             thrust::fill(
-                    thrust::cuda::par.on(stream), data(), data() + num_, value);
+                    thrust::hip::par.on(stream), data(), data() + num_, value);
         }
     }
 

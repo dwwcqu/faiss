@@ -248,8 +248,12 @@ struct BlockSelect {
 
         // Sort all of the per-thread queues
         warpSortAnyRegisters<K, V, NumThreadQ, !Dir, Comp>(threadK, threadV);
+        #ifdef __HIP_PLATFORM_AMD__
+            constexpr int kNumWarpQRegisters = (NumWarpQ / kWarpSize == 0) ? 1 : NumWarpQ / kWarpSize;
+        #else
+            constexpr int kNumWarpQRegisters = NumWarpQ / kWarpSize;
+        #endif
 
-        constexpr int kNumWarpQRegisters = NumWarpQ / kWarpSize;
         K warpKRegisters[kNumWarpQRegisters];
         V warpVRegisters[kNumWarpQRegisters];
 
@@ -440,7 +444,11 @@ template <
         int NumThreadQ,
         int ThreadsPerBlock>
 struct WarpSelect {
-    static constexpr int kNumWarpQRegisters = NumWarpQ / kWarpSize;
+    #ifdef __HIP_PLATFORM_AMD__
+        static constexpr int kNumWarpQRegisters = (NumWarpQ / kWarpSize == 0) ? 1 : NumWarpQ / kWarpSize;
+    #else
+        static constexpr int kNumWarpQRegisters = NumWarpQ / kWarpSize;
+    #endif
 
     __device__ inline WarpSelect(K initKVal, V initVVal, int k)
             : initK(initKVal),

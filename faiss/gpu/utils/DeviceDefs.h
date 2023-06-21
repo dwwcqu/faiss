@@ -19,8 +19,12 @@ namespace gpu {
     #endif
 #endif
 
+#ifdef __HIP_PLATFORM_NVIDIA__
 // We validate this against the actual architecture in device initialization
 constexpr int kWarpSize = 32;
+#else
+constexpr int kWarpSize = 64;
+#endif
 
 // This is a memory barrier for intra-warp writes to shared memory.
 __forceinline__ __device__ void warpFence() {

@@ -71,7 +71,7 @@ void runCalcListOffsets(
             res, stream, thrustMem.data(), thrustMem.getSizeInBytes());
 
     thrust::inclusive_scan(
-            thrust::cuda::par(alloc).on(stream),
+            thrust::hip::par(alloc).on(stream),
             prefixSumOffsets.data(),
             prefixSumOffsets.data() + totalSize,
             prefixSumOffsets.data());

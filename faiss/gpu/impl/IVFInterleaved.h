@@ -39,7 +39,7 @@ template <
         int NumThreadQ,
         bool Residual>
 __global__ void ivfInterleavedScan(
-        Tensor<float, 2, true> queries,
+        Tensor<float, 2, true> queries
         Tensor<float, 3, true> residualBase,
         Tensor<Index::idx_t, 2, true> listIds,
         void** allListData,

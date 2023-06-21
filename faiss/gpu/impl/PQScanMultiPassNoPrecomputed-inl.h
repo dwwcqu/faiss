@@ -340,7 +340,7 @@ void runMultiPassTile(
 
 #define RUN_INTERLEAVED(BITS_PER_CODE, CODE_DIST_T)            \
     do {                                                       \
-        pqScanInterleaved<uint8_t, BITS_PER_CODE, CODE_DIST_T> \
+        HIP_KERNEL_NAME(pqScanInterleaved<uint8_t, BITS_PER_CODE, CODE_DIST_T>) \
                 <<<grid, block, 0, stream>>>(                  \
                         queries,                               \
                         pqCentroidsInnermostCode,              \
