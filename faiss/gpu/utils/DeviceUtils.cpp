@@ -130,7 +130,7 @@ int getDeviceForAddress(const void* p) {
     }
 #endif
 #else
-    if (att.type == hipMemoryTypeDevice) {
+    if (att.memoryType == hipMemoryTypeDevice) {
         return att.device;
     } else {
         return -1;

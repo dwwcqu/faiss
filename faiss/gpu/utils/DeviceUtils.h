@@ -133,7 +133,7 @@ class CudaEvent {
         auto err__ = (X);                   \
         FAISS_ASSERT_FMT(                   \
                 err__ == hipSuccess,       \
-                "CUDA error %d %s",         \
+                "HIP error %d %s",         \
                 (int)err__,                 \
                 hipGetErrorString(err__)); \
     } while (0)

@@ -39,7 +39,7 @@ template <
         int NumThreadQ,
         bool Residual>
 __global__ void ivfInterleavedScan(
-        Tensor<float, 2, true> queries
+        Tensor<float, 2, true> queries,
         Tensor<float, 3, true> residualBase,
         Tensor<Index::idx_t, 2, true> listIds,
         void** allListData,
@@ -218,13 +218,13 @@ __global__ void ivfInterleavedScan(
     do {                                                                       \
         dim3 grid(nprobe, nq);                                                 \
         if (useResidual) {                                                     \
-            ivfInterleavedScan<                                                \
+            HIP_KERNEL_NAME(ivfInterleavedScan<                                                \
                     CODEC_TYPE,                                                \
                     METRIC_TYPE,                                               \
                     THREADS,                                                   \
                     NUM_WARP_Q,                                                \
                     NUM_THREAD_Q,                                              \
-                    true><<<grid, THREADS, codec.getSmemSize(dim), stream>>>(  \
+                    true>)<<<grid, THREADS, codec.getSmemSize(dim), stream>>>(  \
                     queries,                                                   \
                     residualBase,                                              \
                     listIds,                                                   \
@@ -236,13 +236,13 @@ __global__ void ivfInterleavedScan(
                     distanceTemp,                                              \
                     indicesTemp);                                              \
         } else {                                                               \
-            ivfInterleavedScan<                                                \
+            HIP_KERNEL_NAME(ivfInterleavedScan<                                                \
                     CODEC_TYPE,                                                \
                     METRIC_TYPE,                                               \
                     THREADS,                                                   \
                     NUM_WARP_Q,                                                \
                     NUM_THREAD_Q,                                              \
-                    false><<<grid, THREADS, codec.getSmemSize(dim), stream>>>( \
+                    false>)<<<grid, THREADS, codec.getSmemSize(dim), stream>>>( \
                     queries,                                                   \
                     residualBase,                                              \
                     listIds,                                                   \

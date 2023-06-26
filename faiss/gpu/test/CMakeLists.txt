@@ -5,12 +5,13 @@
 # LICENSE file in the root directory of this source tree.
 
 find_package(hip REQUIRED)
+find_package(hipblas REQUIRED)
 
 # Defines `gtest_discover_tests()`.
 include(GoogleTest)
 
 add_library(faiss_gpu_test_helper TestUtils.cpp)
-target_link_libraries(faiss_gpu_test_helper PUBLIC faiss gtest hip::host)
+target_link_libraries(faiss_gpu_test_helper PUBLIC faiss gtest)
 
 macro(faiss_gpu_test file)
   get_filename_component(test_name ${file} NAME_WE)
@@ -33,4 +34,4 @@ add_executable(demo_ivfpq_indexing_gpu EXCLUDE_FROM_ALL
   demo_ivfpq_indexing_gpu.cpp)
 
 target_link_libraries(demo_ivfpq_indexing_gpu
-  PRIVATE faiss gtest_main hip::host)
+  PRIVATE faiss gtest_main)

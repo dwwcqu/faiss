@@ -133,7 +133,7 @@ void runIVFInterleavedScan2(
         Tensor<Index::idx_t, 2, true>& indicesOut,
         hipStream_t stream) {
 #define IVF_SCAN_2(THREADS, NUM_WARP_Q, NUM_THREAD_Q)        \
-    ivfInterleavedScan2<THREADS, NUM_WARP_Q, NUM_THREAD_Q>   \
+    HIP_KERNEL_NAME(ivfInterleavedScan2<THREADS, NUM_WARP_Q, NUM_THREAD_Q>)   \
             <<<distanceIn.getSize(0), THREADS, 0, stream>>>( \
                     distanceIn,                              \
                     indicesIn,                               \

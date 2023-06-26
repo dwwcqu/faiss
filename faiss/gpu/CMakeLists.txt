@@ -37,7 +37,7 @@ set(FAISS_GPU_SRC
   impl/InterleavedCodes.cpp
   impl/L2Norm.cpp
   impl/L2Select.cpp
-  # impl/PQScanMultiPassPrecomputed.cpp
+  impl/PQScanMultiPassPrecomputed.cpp
   impl/RemapIndices.cpp
   impl/VectorResidual.cpp
   impl/scan/IVFInterleaved1.cpp
@@ -179,7 +179,9 @@ endforeach()
 find_package(hip REQUIRED)
 find_package(rocthrust REQUIRED)
 find_package(rocblas REQUIRED)
-target_link_libraries(faiss PRIVATE hip::host hip::device roc::rocthrust roc::rocblas)
-target_link_libraries(faiss_avx2 PRIVATE hip::host hip::device roc::rocthrust roc::rocblas)
+find_package(hiprand REQUIRED)
+find_package(rocrand REQUIRED)
+target_link_libraries(faiss PRIVATE hip::host hip::device roc::rocthrust roc::rocblas PUBLIC hip::hiprand roc::rocrand)
+target_link_libraries(faiss_avx2 PRIVATE hip::host hip::device roc::rocthrust roc::rocblas PUBLIC hip::hiprand roc::rocrand)
 # target_compile_options(faiss PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-Xfatbin=-compress-all>)
 # target_compile_options(faiss_avx2 PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-Xfatbin=-compress-all>)
