@@ -20,15 +20,15 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 # Valid values are "generic", "avx2".
 option(FAISS_OPT_LEVEL "" "generic")
 option(FAISS_ENABLE_GPU "Enable support for GPU indexes." ON)
-option(FAISS_ENABLE_PYTHON "Build Python extension." ON)
+option(FAISS_ENABLE_PYTHON "Build Python extension." OFF)
 option(FAISS_ENABLE_C_API "Build C API." OFF)
 
 if(FAISS_ENABLE_GPU)
   list(APPEND CMAKE_PREFIX_PATH "/opt/rocm/")
-  set(CMAKE_HIP_ARCHITECTURES "gfx906;gfx916:sramecc-")
+  set(AMDGPU_TARGETS "gfx916" CACHE STRING "Choose the ROCm architectures of compiler to build")
+  set(HIP_ARCHITECTURES "gfx906;gfx916" CACHE STRING "Choose the ROCm architectures of compiler to build")
   set(CMAKE_CXX_COMPILER "/opt/rocm/bin/hipcc" CACHE STRING
-      "Choose the type of compiler to build: Default point to hipcc"
-      FORCE)
+      "Choose the type of compiler to build: Default point to hipcc")
 endif()
 
 add_subdirectory(faiss)

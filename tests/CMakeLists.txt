@@ -38,7 +38,7 @@ else()
 endif()
 
 include(FetchContent)
-FetchContent_Declare(googletest
+FetchContent_Declare(googletest DOWNLOAD_EXTRACT_TIMESTAMP TRUE
   URL "https://github.com/google/googletest/archive/release-1.12.1.tar.gz")
 set(BUILD_GMOCK CACHE BOOL OFF)
 set(INSTALL_GTEST CACHE BOOL OFF)
