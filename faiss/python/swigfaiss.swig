@@ -336,13 +336,13 @@ void gpu_sync_all_devices()
 %include  <faiss/gpu/GpuResources.h>
 %include  <faiss/gpu/StandardGpuResources.h>
 
-typedef CUstream_st* cudaStream_t;
+typedef CUstream_st* hipStream_t;
 
 %inline %{
 
-// interop between pytorch exposed cudaStream_t and faiss
-cudaStream_t cast_integer_to_cudastream_t(int64_t x) {
-  return (cudaStream_t) x;
+// interop between pytorch exposed hipStream_t and faiss
+hipStream_t cast_integer_to_hipstream_t(int64_t x) {
+  return (hipStream_t) x;
 }
 
 int64_t cast_cudastream_t_to_integer(cudaStream_t x) {
