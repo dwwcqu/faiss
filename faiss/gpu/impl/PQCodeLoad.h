@@ -12,6 +12,7 @@
 namespace faiss {
 namespace gpu {
 
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if __CUDA_ARCH__ >= 350
 // Use the CC 3.5+ read-only texture cache (nc)
 #define LD_NC_V1 "ld.global.cs.nc.u32"
@@ -23,7 +24,9 @@ namespace gpu {
 #define LD_NC_V2 "ld.global.cs.v2.u32"
 #define LD_NC_V4 "ld.global.cs.v4.u32"
 #endif // __CUDA_ARCH__
+#else
 
+#endif // __HIP_PLATFORM_NVIDIA__
 ///
 /// This file contains loader functions for PQ codes of various byte
 /// length.
@@ -57,7 +60,12 @@ struct LoadCode32<1> {
             uint8_t* p,
             int offset) {
         p += offset * 1;
-        asm("ld.global.cs.u8 {%0}, [%1];" : "=r"(code32[0]) : "r"(p));
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            asm("ld.global.cs.u8 {%0}, [%1];" : "=r"(code32[0]) : "r"(p));
+        #else
+            uint8_t *ptr = (uint8_t *) code32;
+            *ptr = *p;
+        #endif
     }
 };
 
@@ -68,7 +76,13 @@ struct LoadCode32<2> {
             uint8_t* p,
             int offset) {
         p += offset * 2;
-        asm("ld.global.cs.u16 {%0}, [%1];" : "=r"(code32[0]) : "r"(p));
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            asm("ld.global.cs.u16 {%0}, [%1];" : "=r"(code32[0]) : "r"(p));
+        #else
+            uint16_t *ptr = (uint16_t *) code32;
+            uint16_t *temp_p = (uint16_t *)p;
+            *ptr = *temp_p;
+        #endif
     }
 };
 
@@ -82,13 +96,21 @@ struct LoadCode32<3> {
         unsigned int a;
         unsigned int b;
         unsigned int c;
-
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            asm("ld.global.cs.u8 {%0}, [%1 + 0];" : "=r"(a) : "r"(p));
+            asm("ld.global.cs.u8 {%0}, [%1 + 1];" : "=r"(b) : "r"(p));
+            asm("ld.global.cs.u8 {%0}, [%1 + 2];" : "=r"(c) : "r"(p));
+        #else
         // FIXME: this is a non-coalesced, unaligned, non-vectorized load
         // unfortunately need to reorganize memory layout by warp
-        asm("ld.global.cs.u8 {%0}, [%1 + 0];" : "=r"(a) : "r"(p));
-        asm("ld.global.cs.u8 {%0}, [%1 + 1];" : "=r"(b) : "r"(p));
-        asm("ld.global.cs.u8 {%0}, [%1 + 2];" : "=r"(c) : "r"(p));
-
+            uint8_t *ptr_a = (uint8_t *)(&a);
+            uint8_t *ptr_b = (uint8_t *)(&b);
+            uint8_t *ptr_c = (uint8_t *)(&c);
+            uint8_t *temp_p = p;
+            *ptr_a = *temp_p;   ++temp_p;
+            *ptr_b = *temp_p;   ++temp_p;
+            *ptr_c = *temp_p;
+        #endif
         // FIXME: this is also slow, since we have to recover the
         // individual bytes loaded
         code32[0] = (c << 16) | (b << 8) | a;
@@ -102,7 +124,13 @@ struct LoadCode32<4> {
             uint8_t* p,
             int offset) {
         p += offset * 4;
-        asm("ld.global.cs.u32 {%0}, [%1];" : "=r"(code32[0]) : "r"(p));
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            asm("ld.global.cs.u32 {%0}, [%1];" : "=r"(code32[0]) : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            *ptr = *temp_p;
+        #endif
     }
 };
 
@@ -113,9 +141,19 @@ struct LoadCode32<8> {
             uint8_t* p,
             int offset) {
         p += offset * 8;
-        asm("ld.global.cs.v2.u32 {%0, %1}, [%2];"
-            : "=r"(code32[0]), "=r"(code32[1])
-            : "r"(p));
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            asm("ld.global.cs.v2.u32 {%0, %1}, [%2];"
+                : "=r"(code32[0]), "=r"(code32[1])
+                : "r"(p));
+        #else
+        uint32_t *ptr = (uint32_t *)code32;
+        uint32_t *temp_p = (uint32_t *)p;
+        for(int sz = 0; sz < 2; ++sz){
+            *ptr = *temp_p;
+            ++ptr;
+            ++temp_p;
+        }
+        #endif
     }
 };
 
@@ -128,9 +166,19 @@ struct LoadCode32<12> {
         p += offset * 12;
         // FIXME: this is a non-coalesced, unaligned, non-vectorized load
         // unfortunately need to reorganize memory layout by warp
-        asm(LD_NC_V1 " {%0}, [%1 + 0];" : "=r"(code32[0]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 4];" : "=r"(code32[1]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 8];" : "=r"(code32[2]) : "r"(p));
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            asm(LD_NC_V1 " {%0}, [%1 + 0];" : "=r"(code32[0]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 4];" : "=r"(code32[1]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 8];" : "=r"(code32[2]) : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            for(int sz = 0; sz < 3; ++sz){
+                *ptr = *temp_p;
+                ++ptr;
+                ++temp_p;
+            }
+        #endif
     }
 };
 
@@ -141,9 +189,19 @@ struct LoadCode32<16> {
             uint8_t* p,
             int offset) {
         p += offset * 16;
-        asm("ld.global.cs.v4.u32 {%0, %1, %2, %3}, [%4];"
-            : "=r"(code32[0]), "=r"(code32[1]), "=r"(code32[2]), "=r"(code32[3])
-            : "r"(p));
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            asm("ld.global.cs.v4.u32 {%0, %1, %2, %3}, [%4];"
+                : "=r"(code32[0]), "=r"(code32[1]), "=r"(code32[2]), "=r"(code32[3])
+                : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            for(int sz = 0; sz < 4; ++sz){
+                *ptr = *temp_p;
+                ++ptr;
+                ++temp_p;
+            }
+        #endif
     }
 };
 
@@ -154,13 +212,23 @@ struct LoadCode32<20> {
             uint8_t* p,
             int offset) {
         p += offset * 20;
-        // FIXME: this is a non-coalesced, unaligned, non-vectorized load
-        // unfortunately need to reorganize memory layout by warp
-        asm(LD_NC_V1 " {%0}, [%1 + 0];" : "=r"(code32[0]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 4];" : "=r"(code32[1]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 8];" : "=r"(code32[2]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 12];" : "=r"(code32[3]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 16];" : "=r"(code32[4]) : "r"(p));
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            // FIXME: this is a non-coalesced, unaligned, non-vectorized load
+            // unfortunately need to reorganize memory layout by warp
+            asm(LD_NC_V1 " {%0}, [%1 + 0];" : "=r"(code32[0]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 4];" : "=r"(code32[1]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 8];" : "=r"(code32[2]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 12];" : "=r"(code32[3]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 16];" : "=r"(code32[4]) : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            for(int sz = 0; sz < 5; ++sz){
+                *ptr = *temp_p;
+                ++ptr;
+                ++temp_p;
+            }
+        #endif
     }
 };
 
@@ -171,17 +239,27 @@ struct LoadCode32<24> {
             uint8_t* p,
             int offset) {
         p += offset * 24;
-        // FIXME: this is a non-coalesced, unaligned, 2-vectorized load
-        // unfortunately need to reorganize memory layout by warp
-        asm(LD_NC_V2 " {%0, %1}, [%2 + 0];"
-            : "=r"(code32[0]), "=r"(code32[1])
-            : "r"(p));
-        asm(LD_NC_V2 " {%0, %1}, [%2 + 8];"
-            : "=r"(code32[2]), "=r"(code32[3])
-            : "r"(p));
-        asm(LD_NC_V2 " {%0, %1}, [%2 + 16];"
-            : "=r"(code32[4]), "=r"(code32[5])
-            : "r"(p));
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            // FIXME: this is a non-coalesced, unaligned, 2-vectorized load
+            // unfortunately need to reorganize memory layout by warp
+            asm(LD_NC_V2 " {%0, %1}, [%2 + 0];"
+                : "=r"(code32[0]), "=r"(code32[1])
+                : "r"(p));
+            asm(LD_NC_V2 " {%0, %1}, [%2 + 8];"
+                : "=r"(code32[2]), "=r"(code32[3])
+                : "r"(p));
+            asm(LD_NC_V2 " {%0, %1}, [%2 + 16];"
+                : "=r"(code32[4]), "=r"(code32[5])
+                : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            for(int sz = 0; sz < 6; ++sz){
+                *ptr = *temp_p;
+                ++ptr;
+                ++temp_p;
+            }
+        #endif
     }
 };
 
@@ -192,15 +270,25 @@ struct LoadCode32<28> {
             uint8_t* p,
             int offset) {
         p += offset * 28;
-        // FIXME: this is a non-coalesced, unaligned, non-vectorized load
-        // unfortunately need to reorganize memory layout by warp
-        asm(LD_NC_V1 " {%0}, [%1 + 0];" : "=r"(code32[0]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 4];" : "=r"(code32[1]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 8];" : "=r"(code32[2]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 12];" : "=r"(code32[3]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 16];" : "=r"(code32[4]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 20];" : "=r"(code32[5]) : "r"(p));
-        asm(LD_NC_V1 " {%0}, [%1 + 24];" : "=r"(code32[6]) : "r"(p));
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            // FIXME: this is a non-coalesced, unaligned, non-vectorized load
+            // unfortunately need to reorganize memory layout by warp
+            asm(LD_NC_V1 " {%0}, [%1 + 0];" : "=r"(code32[0]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 4];" : "=r"(code32[1]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 8];" : "=r"(code32[2]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 12];" : "=r"(code32[3]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 16];" : "=r"(code32[4]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 20];" : "=r"(code32[5]) : "r"(p));
+            asm(LD_NC_V1 " {%0}, [%1 + 24];" : "=r"(code32[6]) : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            for(int sz = 0; sz < 7; ++sz){
+                *ptr = *temp_p;
+                ++ptr;
+                ++temp_p;
+            }
+        #endif
     }
 };
 
@@ -211,14 +299,24 @@ struct LoadCode32<32> {
             uint8_t* p,
             int offset) {
         p += offset * 32;
-        // FIXME: this is a non-coalesced load
-        // unfortunately need to reorganize memory layout by warp
-        asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4];"
-            : "=r"(code32[0]), "=r"(code32[1]), "=r"(code32[2]), "=r"(code32[3])
-            : "r"(p));
-        asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4 + 16];"
-            : "=r"(code32[4]), "=r"(code32[5]), "=r"(code32[6]), "=r"(code32[7])
-            : "r"(p));
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            // FIXME: this is a non-coalesced load
+            // unfortunately need to reorganize memory layout by warp
+            asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4];"
+                : "=r"(code32[0]), "=r"(code32[1]), "=r"(code32[2]), "=r"(code32[3])
+                : "r"(p));
+            asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4 + 16];"
+                : "=r"(code32[4]), "=r"(code32[5]), "=r"(code32[6]), "=r"(code32[7])
+                : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            for(int sz = 0; sz < 8; ++sz){
+                *ptr = *temp_p;
+                ++ptr;
+                ++temp_p;
+            }
+        #endif
     }
 };
 
@@ -229,23 +327,33 @@ struct LoadCode32<40> {
             uint8_t* p,
             int offset) {
         p += offset * 40;
-        // FIXME: this is a non-coalesced, unaligned, 2-vectorized load
-        // unfortunately need to reorganize memory layout by warp
-        asm(LD_NC_V2 " {%0, %1}, [%2 + 0];"
-            : "=r"(code32[0]), "=r"(code32[1])
-            : "r"(p));
-        asm(LD_NC_V2 " {%0, %1}, [%2 + 8];"
-            : "=r"(code32[2]), "=r"(code32[3])
-            : "r"(p));
-        asm(LD_NC_V2 " {%0, %1}, [%2 + 16];"
-            : "=r"(code32[4]), "=r"(code32[5])
-            : "r"(p));
-        asm(LD_NC_V2 " {%0, %1}, [%2 + 24];"
-            : "=r"(code32[6]), "=r"(code32[7])
-            : "r"(p));
-        asm(LD_NC_V2 " {%0, %1}, [%2 + 32];"
-            : "=r"(code32[8]), "=r"(code32[9])
-            : "r"(p));
+        #ifdef __HIP_PLATFORM_NVIDIA__
+            // FIXME: this is a non-coalesced, unaligned, 2-vectorized load
+            // unfortunately need to reorganize memory layout by warp
+            asm(LD_NC_V2 " {%0, %1}, [%2 + 0];"
+                : "=r"(code32[0]), "=r"(code32[1])
+                : "r"(p));
+            asm(LD_NC_V2 " {%0, %1}, [%2 + 8];"
+                : "=r"(code32[2]), "=r"(code32[3])
+                : "r"(p));
+            asm(LD_NC_V2 " {%0, %1}, [%2 + 16];"
+                : "=r"(code32[4]), "=r"(code32[5])
+                : "r"(p));
+            asm(LD_NC_V2 " {%0, %1}, [%2 + 24];"
+                : "=r"(code32[6]), "=r"(code32[7])
+                : "r"(p));
+            asm(LD_NC_V2 " {%0, %1}, [%2 + 32];"
+                : "=r"(code32[8]), "=r"(code32[9])
+                : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            for(int sz = 0; sz < 10; ++sz){
+                *ptr = *temp_p;
+                ++ptr;
+                ++temp_p;
+            }
+        #endif
     }
 };
 
@@ -256,6 +364,7 @@ struct LoadCode32<48> {
             uint8_t* p,
             int offset) {
         p += offset * 48;
+        #ifdef __HIP_PLATFORM_NVIDIA__
         // FIXME: this is a non-coalesced load
         // unfortunately need to reorganize memory layout by warp
         asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4];"
@@ -270,6 +379,15 @@ struct LoadCode32<48> {
               "=r"(code32[10]),
               "=r"(code32[11])
             : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            for(int sz = 0; sz < 12; ++sz){
+                *ptr = *temp_p;
+                ++ptr;
+                ++temp_p;
+            }
+        #endif
     }
 };
 
@@ -280,6 +398,7 @@ struct LoadCode32<56> {
             uint8_t* p,
             int offset) {
         p += offset * 56;
+        #ifdef __HIP_PLATFORM_NVIDIA__
         // FIXME: this is a non-coalesced, unaligned, 2-vectorized load
         // unfortunately need to reorganize memory layout by warp
         asm(LD_NC_V2 " {%0, %1}, [%2 + 0];"
@@ -303,6 +422,15 @@ struct LoadCode32<56> {
         asm(LD_NC_V2 " {%0, %1}, [%2 + 48];"
             : "=r"(code32[12]), "=r"(code32[13])
             : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            for(int sz = 0; sz < 14; ++sz){
+                *ptr = *temp_p;
+                ++ptr;
+                ++temp_p;
+            }
+        #endif
     }
 };
 
@@ -313,6 +441,7 @@ struct LoadCode32<64> {
             uint8_t* p,
             int offset) {
         p += offset * 64;
+        #ifdef __HIP_PLATFORM_NVIDIA__
         // FIXME: this is a non-coalesced load
         // unfortunately need to reorganize memory layout by warp
         asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4];"
@@ -333,6 +462,15 @@ struct LoadCode32<64> {
               "=r"(code32[14]),
               "=r"(code32[15])
             : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            for(int sz = 0; sz < 16; ++sz){
+                *ptr = *temp_p;
+                ++ptr;
+                ++temp_p;
+            }
+        #endif
     }
 };
 
@@ -343,6 +481,7 @@ struct LoadCode32<96> {
             uint8_t* p,
             int offset) {
         p += offset * 96;
+        #ifdef __HIP_PLATFORM_NVIDIA__
         // FIXME: this is a non-coalesced load
         // unfortunately need to reorganize memory layout by warp
         asm(LD_NC_V4 " {%0, %1, %2, %3}, [%4];"
@@ -375,6 +514,15 @@ struct LoadCode32<96> {
               "=r"(code32[22]),
               "=r"(code32[23])
             : "r"(p));
+        #else
+            uint32_t *ptr = (uint32_t *)code32;
+            uint32_t *temp_p = (uint32_t *)p;
+            for(int sz = 0; sz < 24; ++sz){
+                *ptr = *temp_p;
+                ++ptr;
+                ++temp_p;
+            }
+        #endif
     }
 };
 

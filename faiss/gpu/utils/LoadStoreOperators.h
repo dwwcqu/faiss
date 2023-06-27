@@ -49,12 +49,19 @@ struct LoadStore<Half4> {
                 : "r"(p));
     #endif
 #else
-    asm("ld.global.v2.u32 {%0, %1}, [%2];"
-                : "=r"(out.a.x), "=r"(out.b.x)
-                : "r"(p));
+    uint16_t *ptr = (uint16_t *)p;
+    __half2_raw temp_a;
+    __half2_raw temp_b;
+    temp_a.x = *ptr; ++ptr;
+    temp_a.y = *ptr; ++ptr;
+    temp_b.x = *ptr; ++ptr;
+    temp_b.y = *ptr;
+
+    out.a = temp_a;
+    out.b = temp_b;
 #endif
-        return out;
-    }
+    return out;
+}
 
     static inline __device__ void store(void* p, Half4& v) {
 #ifdef __HIP_PLATFORM_NVIDIA__
@@ -66,7 +73,13 @@ struct LoadStore<Half4> {
         asm("st.v2.u32 [%0], {%1, %2};" : : "r"(p), "r"(v.a.x), "r"(v.b.x));
 #endif
 #else
-    asm("st.v2.u32 [%0], {%1, %2};" : : "r"(p), "r"(v.a.x), "r"(v.b.x));
+    uint16_t *ptr = (uint16_t *)p;
+    __half2_raw temp_a = v.a;
+    __half2_raw temp_b = v.b;
+    *ptr = temp_a.x; ++ptr;
+    *ptr = temp_a.y; ++ptr;
+    *ptr = temp_b.x; ++ptr;
+    *ptr = temp_b.y;
 #endif
     }
 };
@@ -89,9 +102,24 @@ struct LoadStore<Half8> {
             : "r"(p));
 #endif
 #else
-    asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
-            : "=r"(out.a.a.x), "=r"(out.a.b.x), "=r"(out.b.a.x), "=r"(out.b.b.x)
-            : "r"(p));
+    uint16_t *ptr = (uint16_t *)p;
+    __half2_raw temp_a_a;
+    __half2_raw temp_a_b;
+    __half2_raw temp_b_a;
+    __half2_raw temp_b_b;
+    temp_a_a.x = *ptr; ++ptr;
+    temp_a_a.y = *ptr; ++ptr;
+    temp_a_b.x = *ptr; ++ptr;
+    temp_a_b.y = *ptr; ++ptr;
+    temp_b_a.x = *ptr; ++ptr;
+    temp_b_a.y = *ptr; ++ptr;
+    temp_b_b.x = *ptr; ++ptr;
+    temp_b_b.y = *ptr;
+
+    out.a.a = temp_a_a;
+    out.a.b = temp_a_b;
+    out.b.a = temp_b_a;
+    out.b.b = temp_b_b;
 #endif
         return out;
     }
@@ -112,9 +140,19 @@ struct LoadStore<Half8> {
             : "r"(p), "r"(v.a.a.x), "r"(v.a.b.x), "r"(v.b.a.x), "r"(v.b.b.x));
 #endif
 #else
-    asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
-            :
-            : "r"(p), "r"(v.a.a.x), "r"(v.a.b.x), "r"(v.b.a.x), "r"(v.b.b.x));
+    uint16_t *ptr = (uint16_t *)p;
+    __half2_raw temp_a_a = v.a.a;
+    __half2_raw temp_a_b = v.a.b;
+    __half2_raw temp_b_a = v.b.a;
+    __half2_raw temp_b_b = v.b.b;
+    *ptr = temp_a_a.x; ++ptr;
+    *ptr = temp_a_a.y; ++ptr;
+    *ptr = temp_a_b.x; ++ptr;
+    *ptr = temp_a_b.y; ++ptr;
+    *ptr = temp_b_a.x; ++ptr;
+    *ptr = temp_b_a.y; ++ptr;
+    *ptr = temp_b_b.x; ++ptr;
+    *ptr = temp_b_b.y;
 #endif
     }
 };

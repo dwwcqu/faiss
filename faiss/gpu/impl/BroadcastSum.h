@@ -8,7 +8,7 @@
 #pragma once
 #ifdef __HIP_PALTFORM_NVIDIA__
 #else
-#include <hip/amd_detail/amd_hip_fp16.h>
+#include <hip/hip_fp16.h>
 #endif
 #include <faiss/gpu/utils/Tensor.h>
 
