@@ -119,15 +119,18 @@ __device__ __forceinline__ unsigned int setBitfield(
         int len) {
     unsigned int ret;
     unsigned int mask = ((1 << len) - 1) << pos;
+    ret = (val | mask) & (toInsert | (~mask));
     return ret;
 }
 
 __device__ __forceinline__ int getLaneId() {
     int laneId;
-    asm("mov.u32 %0, %%laneid;" : "=r"(laneId));
+    int tid = blockDim.x * blockDim.y * threadIdx.z + blockDim.x * threadIdx.y + threadIdx.x;
+    laneId = tid % 64;
     return laneId;
 }
 
+#if 0
 __device__ __forceinline__ unsigned getLaneMaskLt() {
     unsigned mask;
     asm("mov.u32 %0, %%lanemask_lt;" : "=r"(mask));
@@ -162,6 +165,7 @@ __device__ __forceinline__ void namedBarrierArrived(int name, int numThreads) {
                  : "r"(name), "r"(numThreads)
                  : "memory");
 }
+#endif
 #endif
 } // namespace gpu
 } // namespace faiss

@@ -46,7 +46,4 @@ void runPQScanMultiPassNoPrecomputed(
 
 } // namespace gpu
 } // namespace faiss
-#ifdef __HIP_PLATFORM_NVIDIA
 #include <faiss/gpu/impl/PQScanMultiPassNoPrecomputed-inl.h>
-#else
-#endif

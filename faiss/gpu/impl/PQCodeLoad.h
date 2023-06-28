@@ -61,7 +61,7 @@ struct LoadCode32<1> {
             int offset) {
         p += offset * 1;
         #ifdef __HIP_PLATFORM_NVIDIA__
-            asm("ld.global.cs.u8 {%0}, [%1];" : "=r"(code32[0]) : "r"(p));
+            asm("ld.global.cs.u8 {%0}, [%1];" : "=r"(code32[0]) : "l"(p));
         #else
             uint8_t *ptr = (uint8_t *) code32;
             *ptr = *p;

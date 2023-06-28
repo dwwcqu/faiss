@@ -157,7 +157,9 @@ __launch_bounds__(kWarpSize* kWarpSize) __global__ void generalDistance(
             int remainder = query.getSize(1) - limit;
 
             // thread (y, x) does (query y, vec x)
+#ifdef __HIP_PLATFORM_NVIDIA__
 #pragma unroll
+#endif
             for (int i = 0; i < remainder; ++i) {
                 acc.handle(
                         ConvertTo<float>::to(queryTileBase[i]),

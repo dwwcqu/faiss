@@ -301,10 +301,17 @@ void StandardGpuResourcesImpl::initializeForDevice(int device) {
             prop.minor);
 
     // Our code is pre-built with and expects warpSize == 32, validate that
-    FAISS_ASSERT_FMT(
+    #ifdef __HIP_PLATFORM_NVIDIA__
+        FAISS_ASSERT_FMT(
             prop.warpSize == 32,
             "Device id %d does not have expected warpSize of 32",
             device);
+    #else
+        FAISS_ASSERT_FMT(
+            prop.warpSize == 64,
+            "Device id %d does not have expected warpSize of 32",
+            device);
+    #endif
 
     // Create streams
     hipStream_t defaultStream = 0;

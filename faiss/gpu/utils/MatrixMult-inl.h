@@ -47,7 +47,7 @@ hipblasStatus_t rawGemm(
         int ldc) {
     auto cAT = GetCudaType<AT>::Type;
     auto cBT = GetCudaType<BT>::Type;
-
+    hipblasSetPointerMode(handle, HIPBLAS_POINTER_MODE_HOST);
     // FIXME: some weird CUDA 11 bug? where cublasSgemmEx on
     // f16 (8, 64) x f16 (64, 64)' = f32 (8, 64) returns "not supported".
     // hipblasGemmEx using CUBLAS_COMPUTE_32F also fails, but
@@ -101,8 +101,7 @@ hipblasStatus_t rawGemm(
             HIPBLAS_R_32F,
             ldc);
 #else
-    if (cAT == HIPBLAS_R_16F || cBT == HIPBLAS_R_16F) {
-        return hipblasGemmEx(
+    return hipblasGemmEx(
                 handle,
                 transa,
                 transb,
@@ -122,7 +121,6 @@ hipblasStatus_t rawGemm(
                 ldc,
                 HIPBLAS_R_32F,
                 HIPBLAS_GEMM_DEFAULT);
-    }
 #endif
 }
 
