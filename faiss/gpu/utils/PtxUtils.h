@@ -125,8 +125,9 @@ __device__ __forceinline__ unsigned int setBitfield(
 
 __device__ __forceinline__ int getLaneId() {
     int laneId;
-    int tid = blockDim.x * blockDim.y * threadIdx.z + blockDim.x * threadIdx.y + threadIdx.x;
-    laneId = tid % 64;
+    // int tid = blockDim.x * blockDim.y * threadIdx.z + blockDim.x * threadIdx.y + threadIdx.x;
+    // laneId = tid % 64;
+    laneId = __lane_id();
     return laneId;
 }
 

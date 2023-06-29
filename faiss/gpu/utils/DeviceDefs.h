@@ -33,8 +33,10 @@ __forceinline__ __device__ void warpFence() {
         __syncwarp();
     #else
         // For the time being, assume synchronicity.
-        //  __threadfence_block();
+     __threadfence_block();
     #endif
+#else
+    __threadfence_block();
 #endif
 }
 #ifdef __HIP_PLATFORM_NVIDIA__

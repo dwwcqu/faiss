@@ -63,8 +63,8 @@ struct LoadCode32<1> {
         #ifdef __HIP_PLATFORM_NVIDIA__
             asm("ld.global.cs.u8 {%0}, [%1];" : "=r"(code32[0]) : "l"(p));
         #else
-            uint8_t *ptr = (uint8_t *) code32;
-            *ptr = *p;
+            uint8_t *ptr = p;
+            code32[0] = (uint32_t)*ptr;
         #endif
     }
 };
@@ -79,9 +79,8 @@ struct LoadCode32<2> {
         #ifdef __HIP_PLATFORM_NVIDIA__
             asm("ld.global.cs.u16 {%0}, [%1];" : "=r"(code32[0]) : "r"(p));
         #else
-            uint16_t *ptr = (uint16_t *) code32;
             uint16_t *temp_p = (uint16_t *)p;
-            *ptr = *temp_p;
+            code32[0] = (uint32_t)*temp_p;
         #endif
     }
 };
@@ -103,13 +102,10 @@ struct LoadCode32<3> {
         #else
         // FIXME: this is a non-coalesced, unaligned, non-vectorized load
         // unfortunately need to reorganize memory layout by warp
-            uint8_t *ptr_a = (uint8_t *)(&a);
-            uint8_t *ptr_b = (uint8_t *)(&b);
-            uint8_t *ptr_c = (uint8_t *)(&c);
             uint8_t *temp_p = p;
-            *ptr_a = *temp_p;   ++temp_p;
-            *ptr_b = *temp_p;   ++temp_p;
-            *ptr_c = *temp_p;
+            a = (unsigned int)*temp_p;   ++temp_p;
+            b = (unsigned int)*temp_p;   ++temp_p;
+            c = (unsigned int)*temp_p;
         #endif
         // FIXME: this is also slow, since we have to recover the
         // individual bytes loaded
@@ -127,9 +123,8 @@ struct LoadCode32<4> {
         #ifdef __HIP_PLATFORM_NVIDIA__
             asm("ld.global.cs.u32 {%0}, [%1];" : "=r"(code32[0]) : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
-            *ptr = *temp_p;
+            code32[0] = (unsigned int)*temp_p;
         #endif
     }
 };
@@ -146,11 +141,9 @@ struct LoadCode32<8> {
                 : "=r"(code32[0]), "=r"(code32[1])
                 : "r"(p));
         #else
-        uint32_t *ptr = (uint32_t *)code32;
         uint32_t *temp_p = (uint32_t *)p;
         for(int sz = 0; sz < 2; ++sz){
-            *ptr = *temp_p;
-            ++ptr;
+            code32[sz] = *temp_p;
             ++temp_p;
         }
         #endif
@@ -171,11 +164,9 @@ struct LoadCode32<12> {
             asm(LD_NC_V1 " {%0}, [%1 + 4];" : "=r"(code32[1]) : "r"(p));
             asm(LD_NC_V1 " {%0}, [%1 + 8];" : "=r"(code32[2]) : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
             for(int sz = 0; sz < 3; ++sz){
-                *ptr = *temp_p;
-                ++ptr;
+                code32[sz] = *temp_p;
                 ++temp_p;
             }
         #endif
@@ -194,11 +185,9 @@ struct LoadCode32<16> {
                 : "=r"(code32[0]), "=r"(code32[1]), "=r"(code32[2]), "=r"(code32[3])
                 : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
             for(int sz = 0; sz < 4; ++sz){
-                *ptr = *temp_p;
-                ++ptr;
+                code32[sz] = *temp_p;
                 ++temp_p;
             }
         #endif
@@ -221,11 +210,9 @@ struct LoadCode32<20> {
             asm(LD_NC_V1 " {%0}, [%1 + 12];" : "=r"(code32[3]) : "r"(p));
             asm(LD_NC_V1 " {%0}, [%1 + 16];" : "=r"(code32[4]) : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
             for(int sz = 0; sz < 5; ++sz){
-                *ptr = *temp_p;
-                ++ptr;
+                code32[sz] = *temp_p;
                 ++temp_p;
             }
         #endif
@@ -252,11 +239,9 @@ struct LoadCode32<24> {
                 : "=r"(code32[4]), "=r"(code32[5])
                 : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
             for(int sz = 0; sz < 6; ++sz){
-                *ptr = *temp_p;
-                ++ptr;
+                code32[sz] = *temp_p;
                 ++temp_p;
             }
         #endif
@@ -281,11 +266,9 @@ struct LoadCode32<28> {
             asm(LD_NC_V1 " {%0}, [%1 + 20];" : "=r"(code32[5]) : "r"(p));
             asm(LD_NC_V1 " {%0}, [%1 + 24];" : "=r"(code32[6]) : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
             for(int sz = 0; sz < 7; ++sz){
-                *ptr = *temp_p;
-                ++ptr;
+                code32[sz] = *temp_p;
                 ++temp_p;
             }
         #endif
@@ -309,11 +292,9 @@ struct LoadCode32<32> {
                 : "=r"(code32[4]), "=r"(code32[5]), "=r"(code32[6]), "=r"(code32[7])
                 : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
             for(int sz = 0; sz < 8; ++sz){
-                *ptr = *temp_p;
-                ++ptr;
+                code32[sz] = *temp_p;
                 ++temp_p;
             }
         #endif
@@ -346,11 +327,9 @@ struct LoadCode32<40> {
                 : "=r"(code32[8]), "=r"(code32[9])
                 : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
             for(int sz = 0; sz < 10; ++sz){
-                *ptr = *temp_p;
-                ++ptr;
+                code32[sz] = *temp_p;
                 ++temp_p;
             }
         #endif
@@ -380,11 +359,9 @@ struct LoadCode32<48> {
               "=r"(code32[11])
             : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
             for(int sz = 0; sz < 12; ++sz){
-                *ptr = *temp_p;
-                ++ptr;
+                code32[sz] = *temp_p;
                 ++temp_p;
             }
         #endif
@@ -423,11 +400,9 @@ struct LoadCode32<56> {
             : "=r"(code32[12]), "=r"(code32[13])
             : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
             for(int sz = 0; sz < 14; ++sz){
-                *ptr = *temp_p;
-                ++ptr;
+                code32[sz] = *temp_p;
                 ++temp_p;
             }
         #endif
@@ -463,11 +438,9 @@ struct LoadCode32<64> {
               "=r"(code32[15])
             : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
             for(int sz = 0; sz < 16; ++sz){
-                *ptr = *temp_p;
-                ++ptr;
+                code32[sz] = *temp_p;
                 ++temp_p;
             }
         #endif
@@ -515,11 +488,9 @@ struct LoadCode32<96> {
               "=r"(code32[23])
             : "r"(p));
         #else
-            uint32_t *ptr = (uint32_t *)code32;
             uint32_t *temp_p = (uint32_t *)p;
             for(int sz = 0; sz < 24; ++sz){
-                *ptr = *temp_p;
-                ++ptr;
+                code32[sz] = *temp_p;
                 ++temp_p;
             }
         #endif

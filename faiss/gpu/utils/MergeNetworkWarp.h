@@ -93,8 +93,11 @@ template <
         bool IsBitonic>
 inline __device__ void warpBitonicMergeLE16(K& k, V& v) {
     static_assert(utils::isPowerOf2(L), "L must be a power-of-2");
+    #ifdef __HIP_PLATFORM_NVIDIA__
     static_assert(L <= kWarpSize / 2, "merge list size must be <= 16");
-
+    #else
+    static_assert(L <= kWarpSize / 2, "merge list size must be <= 32");
+    #endif
     int laneId = getLaneId();
 
     if (!IsBitonic) {
@@ -164,7 +167,11 @@ template <typename K, typename V, bool Dir, typename Comp, bool Low>
 struct BitonicMergeStep<K, V, 1, Dir, Comp, Low, true> {
     static inline __device__ void merge(K k[1], V v[1]) {
         // Use warp shuffles
+        #ifdef __HIP_PLATFORM_NVIDIA__
         warpBitonicMergeLE16<K, V, 16, Dir, Comp, true>(k[0], v[0]);
+        #else
+        warpBitonicMergeLE16<K, V, 32, Dir, Comp, true>(k[0], v[0]);
+        #endif
     }
 };
 
@@ -539,6 +546,10 @@ struct BitonicSortStep<K, V, 1, Dir, Comp> {
         warpBitonicMergeLE16<K, V, 4, Dir, Comp, false>(k[0], v[0]);
         warpBitonicMergeLE16<K, V, 8, Dir, Comp, false>(k[0], v[0]);
         warpBitonicMergeLE16<K, V, 16, Dir, Comp, false>(k[0], v[0]);
+        #ifdef __HIP_PLATFORM_NVIDIA__
+        #else
+        warpBitonicMergeLE16<K, V, 32, Dir, Comp, false>(k[0], v[0]);
+        #endif
     }
 };
 

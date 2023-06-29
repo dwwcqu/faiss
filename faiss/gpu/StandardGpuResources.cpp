@@ -309,7 +309,7 @@ void StandardGpuResourcesImpl::initializeForDevice(int device) {
     #else
         FAISS_ASSERT_FMT(
             prop.warpSize == 64,
-            "Device id %d does not have expected warpSize of 32",
+            "Device id %d does not have expected warpSize of 64",
             device);
     #endif
 
