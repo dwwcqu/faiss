@@ -52,7 +52,7 @@
         auto kInit = dir ? Limits<TYPE>::getMin() : Limits<TYPE>::getMax();    \
         auto vInit = -1;                                                       \
                                                                                \
-        blockSelect<TYPE, int, DIR, WARP_Q, THREAD_Q, kBlockSelectNumThreads>  \
+        HIP_KERNEL_NAME(blockSelect<TYPE, int, DIR, WARP_Q, THREAD_Q, kBlockSelectNumThreads>)  \
                 <<<grid, block, 0, stream>>>(in, outK, outV, kInit, vInit, k); \
         CUDA_TEST_ERROR();                                                     \
     }                                                                          \
@@ -79,13 +79,13 @@
         auto kInit = dir ? Limits<TYPE>::getMin() : Limits<TYPE>::getMax();    \
         auto vInit = -1;                                                       \
                                                                                \
-        blockSelectPair<                                                       \
+        HIP_KERNEL_NAME(blockSelectPair<                                                       \
                 TYPE,                                                          \
                 int,                                                           \
                 DIR,                                                           \
                 WARP_Q,                                                        \
                 THREAD_Q,                                                      \
-                kBlockSelectNumThreads><<<grid, block, 0, stream>>>(           \
+                kBlockSelectNumThreads>)<<<grid, block, 0, stream>>>(           \
                 inK, inV, outK, outV, kInit, vInit, k);                        \
         CUDA_TEST_ERROR();                                                     \
     }

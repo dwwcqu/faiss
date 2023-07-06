@@ -36,7 +36,7 @@
         auto kInit = dir ? Limits<TYPE>::getMin() : Limits<TYPE>::getMax();    \
         auto vInit = -1;                                                       \
                                                                                \
-        warpSelect<TYPE, int, DIR, WARP_Q, THREAD_Q, kWarpSelectNumThreads>    \
+        HIP_KERNEL_NAME(warpSelect<TYPE, int, DIR, WARP_Q, THREAD_Q, kWarpSelectNumThreads>)    \
                 <<<grid, block, 0, stream>>>(in, outK, outV, kInit, vInit, k); \
         CUDA_TEST_ERROR();                                                     \
     }
