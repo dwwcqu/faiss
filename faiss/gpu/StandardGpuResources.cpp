@@ -274,7 +274,7 @@ void StandardGpuResourcesImpl::initializeForDevice(int device) {
     // If this is the first device that we're initializing, create our
     // pinned memory allocation
     if (defaultStreams_.empty() && pinnedMemSize_ > 0) {
-        auto err = hipHostAlloc(
+        auto err = hipHostMalloc(
                 &pinnedMemAlloc_, pinnedMemSize_, hipHostMallocDefault);
 
         FAISS_THROW_IF_NOT_FMT(
