@@ -173,7 +173,7 @@ struct GpuMemoryReservation {
 };
 
 /// Base class of GPU-side resource provider; hides provision of
-/// cuBLAS handles, CUDA streams and all device memory allocation performed
+/// hipBLAS handles, CUDA streams and all device memory allocation performed
 class GpuResources {
    public:
     virtual ~GpuResources();

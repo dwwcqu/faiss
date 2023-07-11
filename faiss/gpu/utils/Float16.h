@@ -11,11 +11,14 @@
 #include <faiss/gpu/GpuResources.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 
+#ifdef __HIP_PLATFORM_NVIDIA__
 // Some compute capabilities have full float16 ALUs.
 #if __CUDA_ARCH__ >= 530
 #define FAISS_USE_FULL_FLOAT16 1
 #endif // __CUDA_ARCH__ types
-
+#else 
+#define FAISS_USE_FULL_FLOAT16 1
+#endif
 #include <hip/hip_fp16.h>
 
 namespace faiss {

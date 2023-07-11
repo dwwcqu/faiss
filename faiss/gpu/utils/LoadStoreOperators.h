@@ -40,16 +40,16 @@ struct LoadStore<Half4> {
         Half4 out;
 #ifdef __HIP_PLATFORM_NVIDIA__
     #if CUDA_VERSION >= 9000
-            asm("ld.global.v2.u32 {%0, %1}, [%2];"
-                : "=r"(__HALF2_TO_UI(out.a)), "=r"(__HALF2_TO_UI(out.b))
-                : "r"(p));
+        asm("ld.global.v2.u32 {%0, %1}, [%2];"
+            : "=r"(__HALF2_TO_UI(out.a)), "=r"(__HALF2_TO_UI(out.b))
+            : "l"(p));
     #else
-            asm("ld.global.v2.u32 {%0, %1}, [%2];"
-                : "=r"(out.a.x), "=r"(out.b.x)
-                : "r"(p));
+        asm("ld.global.v2.u32 {%0, %1}, [%2];"
+            : "=r"(out.a.x), "=r"(out.b.x)
+            : "l"(p));
     #endif
 #else
-    uint16_t *ptr = (uint16_t *)p;
+    uint16_t *ptr = reinterpret_cast<uint16_t*>(p);
     __half2_raw temp_a;
     __half2_raw temp_b;
     temp_a.x = *ptr; ++ptr;
@@ -68,12 +68,12 @@ struct LoadStore<Half4> {
 #if CUDA_VERSION >= 9000
         asm("st.v2.u32 [%0], {%1, %2};"
             :
-            : "r"(p), "r"(__HALF2_TO_UI(v.a)), "r"(__HALF2_TO_UI(v.b)));
+            : "l"(p), "r"(__HALF2_TO_UI(v.a)), "r"(__HALF2_TO_UI(v.b)));
 #else
-        asm("st.v2.u32 [%0], {%1, %2};" : : "r"(p), "r"(v.a.x), "r"(v.b.x));
+        asm("st.v2.u32 [%0], {%1, %2};" : : "l"(p), "r"(v.a.x), "r"(v.b.x));
 #endif
 #else
-    uint16_t *ptr = (uint16_t *)p;
+    uint16_t *ptr = reinterpret_cast<uint16_t*>(p);
     __half2_raw temp_a = v.a;
     __half2_raw temp_b = v.b;
     *ptr = temp_a.x; ++ptr;
@@ -95,14 +95,14 @@ struct LoadStore<Half8> {
               "=r"(__HALF2_TO_UI(out.a.b)),
               "=r"(__HALF2_TO_UI(out.b.a)),
               "=r"(__HALF2_TO_UI(out.b.b))
-            : "r"(p));
+            : "l"(p));
 #else
         asm("ld.global.v4.u32 {%0, %1, %2, %3}, [%4];"
             : "=r"(out.a.a.x), "=r"(out.a.b.x), "=r"(out.b.a.x), "=r"(out.b.b.x)
-            : "r"(p));
+            : "l"(p));
 #endif
 #else
-    uint16_t *ptr = (uint16_t *)p;
+    uint16_t *ptr = reinterpret_cast<uint16_t*>(p);
     __half2_raw temp_a_a;
     __half2_raw temp_a_b;
     __half2_raw temp_b_a;
@@ -129,7 +129,7 @@ struct LoadStore<Half8> {
 #if CUDA_VERSION >= 9000
         asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
             :
-            : "r"(p),
+            : "l"(p),
               "r"(__HALF2_TO_UI(v.a.a)),
               "r"(__HALF2_TO_UI(v.a.b)),
               "r"(__HALF2_TO_UI(v.b.a)),
@@ -137,10 +137,10 @@ struct LoadStore<Half8> {
 #else
         asm("st.v4.u32 [%0], {%1, %2, %3, %4};"
             :
-            : "r"(p), "r"(v.a.a.x), "r"(v.a.b.x), "r"(v.b.a.x), "r"(v.b.b.x));
+            : "l"(p), "r"(v.a.a.x), "r"(v.a.b.x), "r"(v.b.a.x), "r"(v.b.b.x));
 #endif
 #else
-    uint16_t *ptr = (uint16_t *)p;
+    uint16_t *ptr = reinterpret_cast<uint16_t*>(p);
     __half2_raw temp_a_a = v.a.a;
     __half2_raw temp_a_b = v.a.b;
     __half2_raw temp_b_a = v.b.a;

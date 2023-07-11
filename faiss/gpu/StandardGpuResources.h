@@ -139,7 +139,7 @@ class StandardGpuResourcesImpl : public GpuResources {
     bool allocLogging_;
 };
 
-/// Default implementation of GpuResources that allocates a cuBLAS
+/// Default implementation of GpuResources that allocates a hipBLAS
 /// stream and 2 streams for use, as well as temporary memory.
 /// Internally, the Faiss GPU code uses the instance managed by getResources,
 /// but this is the user-facing object that is internally reference counted.

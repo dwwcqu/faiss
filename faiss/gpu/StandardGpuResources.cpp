@@ -336,7 +336,7 @@ void StandardGpuResourcesImpl::initializeForDevice(int device) {
 
     alternateStreams_[device] = std::move(deviceStreams);
 
-    // Create cuBLAS handle
+    // Create hipBLAS handle
     hipblasHandle_t blasHandle = 0;
     auto blasStatus = hipblasCreate(&blasHandle);
     FAISS_ASSERT(blasStatus == HIPBLAS_STATUS_SUCCESS);

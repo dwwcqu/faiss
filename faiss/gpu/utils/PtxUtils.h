@@ -91,24 +91,22 @@ __device__ __forceinline__ void namedBarrierArrived(int name, int numThreads) {
 
 // defines to simplify the SASS assembly structure file/line in the profiler
 #define GET_BITFIELD_U32(OUT, VAL, POS, LEN) \
-    OUT = ((VAL >> POS) & (1 << LEN) - 1);
+    OUT = __bitextract_u32(VAL, POS, LEN);
 
 #define GET_BITFIELD_U64(OUT, VAL, POS, LEN) \
-    OUT = ((VAL >> POS) & (1 << LEN) - 1);
+    OUT = __bitextract_u64(VAL, POS, LEN);
 
 __device__ __forceinline__ unsigned int getBitfield(
         unsigned int val,
         int pos,
         int len) {
-    unsigned int ret;
-    ret = (val >> pos) & ((1 << len) - 1);
+    unsigned int ret = __bitextract_u32(val, pos, len);
     return ret;
 }
 
 __device__ __forceinline__ uint64_t
 getBitfield(uint64_t val, int pos, int len) {
-    uint64_t ret;
-    ret = (val >> pos) & ((1 << len) - 1);
+    uint64_t ret = __bitextract_u64(val, pos, len);
     return ret;
 }
 
@@ -117,9 +115,7 @@ __device__ __forceinline__ unsigned int setBitfield(
         unsigned int toInsert,
         int pos,
         int len) {
-    unsigned int ret;
-    unsigned int mask = ((1 << len) - 1) << pos;
-    ret = (val | mask) & (toInsert | (~mask));
+    unsigned int ret = __bitinsert_u32(val, toInsert, pos, len);
     return ret;
 }
 

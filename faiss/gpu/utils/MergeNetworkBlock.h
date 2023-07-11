@@ -121,7 +121,11 @@ template <
         bool FullMerge>
 inline __device__ void blockMergeLarge(K* listK, V* listV) {
     static_assert(utils::isPowerOf2(L), "L must be a power-of-2");
+    #ifdef __HIP_PLATFORM_NVIDIA__
     static_assert(L >= kWarpSize, "merge list size must be >= 32");
+    #else
+    static_assert(L >= kWarpSize, "merge list size must be >= 64");
+    #endif
     static_assert(
             utils::isPowerOf2(NumThreads), "NumThreads must be a power-of-2");
     static_assert(L >= NumThreads, "merge list size must be >= NumThreads");

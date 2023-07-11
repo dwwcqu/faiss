@@ -467,20 +467,28 @@ class SubTensor<TensorType, 0, PtrTraits> {
 
     /// Use the texture cache for reads
     __device__ inline typename TensorType::DataType ldg() const {
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if __CUDA_ARCH__ >= 350
         return __ldg(data_);
 #else
         return *data_;
+#endif
+#else
+    return *data_;
 #endif
     }
 
     /// Use the texture cache for reads; cast as a particular type
     template <typename T>
     __device__ inline T ldgAs() const {
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if __CUDA_ARCH__ >= 350
         return __ldg(dataAs<T>());
 #else
         return as<T>();
+#endif
+#else
+    return as<T>();
 #endif
     }
 
@@ -603,20 +611,28 @@ class SubTensor {
 
     /// Use the texture cache for reads
     __device__ inline typename TensorType::DataType ldg() const {
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if __CUDA_ARCH__ >= 350
         return __ldg(data_);
 #else
         return *data_;
+#endif
+#else
+    return *data_;
 #endif
     }
 
     /// Use the texture cache for reads; cast as a particular type
     template <typename T>
     __device__ inline T ldgAs() const {
+#ifdef __HIP_PLATFORM_NVIDIA__
 #if __CUDA_ARCH__ >= 350
         return __ldg(dataAs<T>());
 #else
         return as<T>();
+#endif
+#else
+    return as<T>();
 #endif
     }
 
