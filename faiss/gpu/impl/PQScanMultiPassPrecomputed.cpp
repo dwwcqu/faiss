@@ -68,10 +68,10 @@ __global__ void pqScanPrecomputedInterleaved(
     int numVecs = listLengths[listId];
 
     // How many vector blocks of 32 are in this list?
-    int numBlocks = utils::divUp(numVecs, 64);
+    int numBlocks = utils::divUp(numVecs, 32);
 
     // Number of EncodeT words per each dimension of block of 32 vecs
-    constexpr int bytesPerVectorBlockDim = EncodeBits * 64 / 8;
+    constexpr int bytesPerVectorBlockDim = EncodeBits * 32 / 8;
     constexpr int wordsPerVectorBlockDim =
             bytesPerVectorBlockDim / sizeof(EncodeT);
     int wordsPerVectorBlock = wordsPerVectorBlockDim * numSubQuantizers;

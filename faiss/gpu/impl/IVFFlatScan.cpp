@@ -233,7 +233,7 @@ void runIVFFlatScanTile(
 
 #define RUN_IVF_FLAT                                                  \
     do {                                                              \
-        HIP_KERNEL_NAME(ivfFlatScan<<<grid, block, codec.getSmemSize(dim), stream>>>)( \
+        ivfFlatScan<<<grid, block, codec.getSmemSize(dim), stream>>>( \
                 queries,                                              \
                 useResidual,                                          \
                 residualBase,                                         \

@@ -205,7 +205,7 @@ void runL2SelectMin(
 
 #define RUN_L2_SELECT(BLOCK, NUM_WARP_Q, NUM_THREAD_Q)   \
     do {                                                 \
-        HIP_KERNEL_NAME(l2SelectMinK<T, NUM_WARP_Q, NUM_THREAD_Q, BLOCK>) \
+        l2SelectMinK<T, NUM_WARP_Q, NUM_THREAD_Q, BLOCK> \
                 <<<grid, BLOCK, 0, stream>>>(            \
                         productDistances,                \
                         centroidDistances,               \

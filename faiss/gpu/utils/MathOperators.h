@@ -291,7 +291,9 @@ struct Math<half> {
         return h;
 #endif
 #else
-    return 0;
+    __half_raw h;
+    h.x = 0;
+    return __half(h);
 #endif
     }
 };

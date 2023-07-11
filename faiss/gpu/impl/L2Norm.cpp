@@ -223,39 +223,39 @@ void runL2Norm(
     do {                                                                      \
         if (normLoop) {                                                       \
             if (normSquared) {                                                \
-                HIP_KERNEL_NAME(l2NormRowMajor<                                               \
+                l2NormRowMajor<                                               \
                         TYPE_T,                                               \
                         TYPE_TVEC,                                            \
                         IndexType,                                            \
                         rowTileSize,                                          \
                         true,                                                 \
-                        true>)<<<grid, block, smem, stream>>>(INPUT, output);  \
+                        true><<<grid, block, smem, stream>>>(INPUT, output);  \
             } else {                                                          \
-                HIP_KERNEL_NAME(l2NormRowMajor<                                               \
+                l2NormRowMajor<                                               \
                         TYPE_T,                                               \
                         TYPE_TVEC,                                            \
                         IndexType,                                            \
                         rowTileSize,                                          \
                         true,                                                 \
-                        false>)<<<grid, block, smem, stream>>>(INPUT, output); \
+                        false><<<grid, block, smem, stream>>>(INPUT, output); \
             }                                                                 \
         } else {                                                              \
             if (normSquared) {                                                \
-                HIP_KERNEL_NAME(l2NormRowMajor<                                               \
+                l2NormRowMajor<                                               \
                         TYPE_T,                                               \
                         TYPE_TVEC,                                            \
                         IndexType,                                            \
                         rowTileSize,                                          \
                         false,                                                \
-                        true>)<<<grid, block, smem, stream>>>(INPUT, output);  \
+                        true><<<grid, block, smem, stream>>>(INPUT, output);  \
             } else {                                                          \
-                HIP_KERNEL_NAME(l2NormRowMajor<                                               \
+                l2NormRowMajor<                                               \
                         TYPE_T,                                               \
                         TYPE_TVEC,                                            \
                         IndexType,                                            \
                         rowTileSize,                                          \
                         false,                                                \
-                        false>)<<<grid, block, smem, stream>>>(INPUT, output); \
+                        false><<<grid, block, smem, stream>>>(INPUT, output); \
             }                                                                 \
         }                                                                     \
     } while (0)

@@ -397,10 +397,10 @@ __global__ void ivfInterleavedAppend(
     // 32, but we ensure that it only operates on the group of 32 vectors. In
     // order to do this we need to actually start updating vectors at the next
     // lower multiple of 32 from listVecStart.
-    int alignedListVecStart = utils::roundDown(listVecStart, 64);
+    int alignedListVecStart = utils::roundDown(listVecStart, 32);
 
     // Each block of 32 vectors fully encodes into this many bytes
-    constexpr int bytesPerVectorBlockDim = EncodeBits * 64 / 8;
+    constexpr int bytesPerVectorBlockDim = EncodeBits * 32 / 8;
     constexpr int wordsPerVectorBlockDim =
             bytesPerVectorBlockDim / sizeof(EncodeT);
     int wordsPerVectorBlock = wordsPerVectorBlockDim * encodedVecs.getSize(1);
@@ -408,10 +408,10 @@ __global__ void ivfInterleavedAppend(
     EncodeT* listStart = ((EncodeT*)listData[listId]);
 
     // Each warp within the block handles a different chunk of 32
-    int warpVec = alignedListVecStart + warpId * 64;
+    int warpVec = alignedListVecStart + warpId * 32;
 
     // The warp data starts here
-    EncodeT* warpData = listStart + (warpVec / 64) * wordsPerVectorBlock;
+    EncodeT* warpData = listStart + (warpVec / 32) * wordsPerVectorBlock;
 
     // Each warp encodes a single block
     for (; warpVec < listVecStart + numVecsAdding;

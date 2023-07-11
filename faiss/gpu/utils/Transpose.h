@@ -85,14 +85,11 @@ __global__ void transposeAny(
         auto inputOffset = TensorInfoOffset<T, IndexT, DimInput>::get(input, i);
         auto outputOffset =
                 TensorInfoOffset<T, IndexT, DimOutput>::get(output, i);
-#ifdef __HIP_PLATFORM_NVIDIA__
+
 #if __CUDA_ARCH__ >= 350
         output.data[outputOffset] = __ldg(&input.data[inputOffset]);
 #else
         output.data[outputOffset] = input.data[inputOffset];
-#endif
-#else
-    output.data[outputOffset] = __ldg(&input.data[inputOffset]);
 #endif
     }
 }

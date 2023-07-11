@@ -274,7 +274,7 @@ void StandardGpuResourcesImpl::initializeForDevice(int device) {
     // If this is the first device that we're initializing, create our
     // pinned memory allocation
     if (defaultStreams_.empty() && pinnedMemSize_ > 0) {
-        auto err = hipHostMalloc(
+        auto err = hipHostAlloc(
                 &pinnedMemAlloc_, pinnedMemSize_, hipHostMallocDefault);
 
         FAISS_THROW_IF_NOT_FMT(
@@ -336,7 +336,7 @@ void StandardGpuResourcesImpl::initializeForDevice(int device) {
 
     alternateStreams_[device] = std::move(deviceStreams);
 
-    // Create hipBLAS handle
+    // Create cuBLAS handle
     hipblasHandle_t blasHandle = 0;
     auto blasStatus = hipblasCreate(&blasHandle);
     FAISS_ASSERT(blasStatus == HIPBLAS_STATUS_SUCCESS);
@@ -346,13 +346,10 @@ void StandardGpuResourcesImpl::initializeForDevice(int device) {
     // rounding down of inputs to f16 (though accumulate in f32) which results
     // in unacceptable loss of precision in general. For CUDA 11 / A100, only
     // enable tensor core support if it doesn't result in a loss of precision.
-#ifdef __HIP_PLATFORM_NVIDIA__
 // #if CUDA_VERSION >= 11000
 #if 0   // ROCm ROCBlas not supports cublasSetMathMode() API
     cublasSetMathMode(
             blasHandle, CUBLAS_MATH_DISALLOW_REDUCED_PRECISION_REDUCTION);
-#endif
-#else
 #endif
 
     FAISS_ASSERT(allocs_.count(device) == 0);
