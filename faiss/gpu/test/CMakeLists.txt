@@ -35,3 +35,6 @@ add_executable(demo_ivfpq_indexing_gpu EXCLUDE_FROM_ALL
 
 target_link_libraries(demo_ivfpq_indexing_gpu
   PRIVATE faiss gtest_main)
+
+## ours porting CUDA-backend to RCOm-backend test case
+add_subdirectory(ports)
