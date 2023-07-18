@@ -10,8 +10,8 @@
 namespace faiss {
 namespace gpu {
 
-BLOCK_SELECT_IMPL(float, true, 32, 2);
-BLOCK_SELECT_IMPL(float, false, 32, 2);
+// BLOCK_SELECT_IMPL(float, true, 32, 2);
+// BLOCK_SELECT_IMPL(float, false, 32, 2);
 
 } // namespace gpu
 } // namespace faiss
