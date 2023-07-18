@@ -217,7 +217,7 @@ void runL2SelectMin(
 
         // block size 128 for everything <= 1024
         if (k <= 32) {
-            RUN_L2_SELECT(128, 32, 2);
+            RUN_L2_SELECT(128, 64, 2);
         } else if (k <= 64) {
             RUN_L2_SELECT(128, 64, 3);
         } else if (k <= 128) {
