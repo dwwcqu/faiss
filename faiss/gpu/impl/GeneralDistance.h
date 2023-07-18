@@ -1,11 +1,10 @@
-#include "hip/hip_runtime.h"
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+#include "hip/hip_runtime.h"
 #include <faiss/MetricType.h>
 #include <faiss/gpu/utils/DeviceUtils.h>
 #include <faiss/impl/AuxIndexStructures.h>
@@ -249,7 +248,7 @@ void runGeneralDistanceKernel(
             utils::divUp(query.getSize(0), kWarpSize));
     dim3 block(kWarpSize, kWarpSize);
 
-    hipLaunchKernelGGL(generalDistance, grid, block, 0, stream, query, vecs, op, out);
+    hipLaunchKernelGGL(HIP_KERNEL_NAME(generalDistance), grid, block, 0, stream, query, vecs, op, out);
 }
 
 template <typename T, typename DistanceOp, bool InnerContig>
