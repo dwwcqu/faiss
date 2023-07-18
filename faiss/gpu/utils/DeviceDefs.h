@@ -22,8 +22,10 @@ namespace gpu {
 #ifdef __HIP_PLATFORM_NVIDIA__
 // We validate this against the actual architecture in device initialization
 constexpr int kWarpSize = 32;
+constexpr int kCUDAWarpSize = 32;
 #else
 constexpr int kWarpSize = 64;
+constexpr int kCUDAWarpSize = 32;
 #endif
 
 // This is a memory barrier for intra-warp writes to shared memory.

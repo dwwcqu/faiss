@@ -56,8 +56,8 @@ struct ReduceDistanceOp<DistanceOp, 1> {
 template <typename T, int Unroll, int DimMultiple, typename DistanceOp>
 inline __device__ DistanceOp
 reduce(const DistanceOp& in,
-       const T queryTile[kWarpSize][DimMultiple * kWarpSize + 1],
-       const T vecTile[kWarpSize][DimMultiple * kWarpSize + 1]) {
+       const T queryTile[kCUDAWarpSize][DimMultiple * kCUDAWarpSize + 1],
+       const T vecTile[kCUDAWarpSize][DimMultiple * kCUDAWarpSize + 1]) {
     DistanceOp accs[Unroll];
 #pragma unroll
     for (int i = 0; i < Unroll; ++i) {
@@ -70,8 +70,8 @@ reduce(const DistanceOp& in,
 #pragma unroll
     for (int i = 0; i < Unroll; ++i) {
 #pragma unroll
-        for (int j = 0; j < (kWarpSize * DimMultiple / Unroll); ++j) {
-            int idx = i * (kWarpSize * DimMultiple / Unroll) + j;
+        for (int j = 0; j < (kCUDAWarpSize * DimMultiple / Unroll); ++j) {
+            int idx = i * (kCUDAWarpSize * DimMultiple / Unroll) + j;
             accs[i].handle(
                     ConvertTo<float>::to(queryTileBase[idx]),
                     ConvertTo<float>::to(vecTileBase[idx]));
@@ -83,23 +83,23 @@ reduce(const DistanceOp& in,
 
 // Our general distance matrix "multiplication" kernel
 template <typename T, typename DistanceOp, bool InnerContig>
-__launch_bounds__(kWarpSize* kWarpSize) __global__ void generalDistance(
+__launch_bounds__(kCUDAWarpSize* kCUDAWarpSize) __global__ void generalDistance(
         Tensor<T, 2, InnerContig> query, // m x k
         Tensor<T, 2, InnerContig> vec,   // n x k
         DistanceOp op,
         Tensor<float, 2, true> out) { // m x n
     constexpr int kDimMultiple = 1;
 
-    __shared__ T queryTile[kWarpSize][kWarpSize * kDimMultiple + 1];
-    __shared__ T vecTile[kWarpSize][kWarpSize * kDimMultiple + 1];
+    __shared__ T queryTile[kCUDAWarpSize][kCUDAWarpSize * kDimMultiple + 1];
+    __shared__ T vecTile[kCUDAWarpSize][kCUDAWarpSize * kDimMultiple + 1];
 
     // block y -> query
     // block x -> vector
 
-    int queryBlock = blockIdx.y * kWarpSize;
+    int queryBlock = blockIdx.y * kCUDAWarpSize;
     int queryThread = queryBlock + threadIdx.y;
 
-    int vecBlock = blockIdx.x * kWarpSize;
+    int vecBlock = blockIdx.x * kCUDAWarpSize;
     int vecThreadLoad = vecBlock + threadIdx.y;
     int vecThreadSave = vecBlock + threadIdx.x;
 
@@ -116,16 +116,16 @@ __launch_bounds__(kWarpSize* kWarpSize) __global__ void generalDistance(
         // Interior tile
         //
         int limit =
-                utils::roundDown(query.getSize(1), kWarpSize * kDimMultiple);
+                utils::roundDown(query.getSize(1), kCUDAWarpSize * kDimMultiple);
 
-        for (int k = threadIdx.x; k < limit; k += kWarpSize * kDimMultiple) {
+        for (int k = threadIdx.x; k < limit; k += kCUDAWarpSize * kDimMultiple) {
             // Load query tile
 #pragma unroll
             for (int i = 0; i < kDimMultiple; ++i) {
-                queryTileBase[threadIdx.x + i * kWarpSize] =
-                        queryBase[k + i * kWarpSize];
-                vecTileBase[threadIdx.x + i * kWarpSize] =
-                        vecBase[k + i * kWarpSize];
+                queryTileBase[threadIdx.x + i * kCUDAWarpSize] =
+                        queryBase[k + i * kCUDAWarpSize];
+                vecTileBase[threadIdx.x + i * kCUDAWarpSize] =
+                        vecBase[k + i * kCUDAWarpSize];
             }
 
             __syncthreads();
@@ -141,13 +141,13 @@ __launch_bounds__(kWarpSize* kWarpSize) __global__ void generalDistance(
         if (limit < query.getSize(1)) {
 #pragma unroll
             for (int i = 0; i < kDimMultiple; ++i) {
-                int k = limit + threadIdx.x + i * kWarpSize;
+                int k = limit + threadIdx.x + i * kCUDAWarpSize;
                 bool kInBounds = k < query.getSize(1);
 
-                queryTileBase[threadIdx.x + i * kWarpSize] =
+                queryTileBase[threadIdx.x + i * kCUDAWarpSize] =
                         kInBounds ? queryBase[k] : ConvertTo<T>::to(0);
 
-                vecTileBase[threadIdx.x + i * kWarpSize] =
+                vecTileBase[threadIdx.x + i * kCUDAWarpSize] =
                         kInBounds ? vecBase[k] : ConvertTo<T>::to(0);
             }
 
@@ -176,9 +176,9 @@ __launch_bounds__(kWarpSize* kWarpSize) __global__ void generalDistance(
         bool queryThreadInBounds = queryThread < query.getSize(0);
         bool vecThreadInBoundsLoad = vecThreadLoad < vec.getSize(0);
         bool vecThreadInBoundsSave = vecThreadSave < vec.getSize(0);
-        int limit = utils::roundDown(query.getSize(1), kWarpSize);
+        int limit = utils::roundDown(query.getSize(1), kCUDAWarpSize);
 
-        for (int k = threadIdx.x; k < limit; k += kWarpSize) {
+        for (int k = threadIdx.x; k < limit; k += kCUDAWarpSize) {
             // Load query tile
             queryTileBase[threadIdx.x] =
                     queryThreadInBounds ? queryBase[k] : ConvertTo<T>::to(0);
@@ -190,7 +190,7 @@ __launch_bounds__(kWarpSize* kWarpSize) __global__ void generalDistance(
 
             // thread (y, x) does (query y, vec x)
 #pragma unroll
-            for (int i = 0; i < kWarpSize; ++i) {
+            for (int i = 0; i < kCUDAWarpSize; ++i) {
                 acc.handle(
                         ConvertTo<float>::to(queryTileBase[i]),
                         ConvertTo<float>::to(vecTile[threadIdx.x][i]));
@@ -244,9 +244,9 @@ void runGeneralDistanceKernel(
     FAISS_ASSERT(out.getSize(1) == vecs.getSize(0));
 
     dim3 grid(
-            utils::divUp(vecs.getSize(0), kWarpSize),
-            utils::divUp(query.getSize(0), kWarpSize));
-    dim3 block(kWarpSize, kWarpSize);
+            utils::divUp(vecs.getSize(0), kCUDAWarpSize),
+            utils::divUp(query.getSize(0), kCUDAWarpSize));
+    dim3 block(kCUDAWarpSize, kCUDAWarpSize);
 
     hipLaunchKernelGGL(HIP_KERNEL_NAME(generalDistance), grid, block, 0, stream, query, vecs, op, out);
 }
