@@ -173,7 +173,7 @@ struct GpuMemoryReservation {
 };
 
 /// Base class of GPU-side resource provider; hides provision of
-/// hipBLAS handles, CUDA streams and all device memory allocation performed
+/// hipBLAS handles, HIP streams and all device memory allocation performed
 class GpuResources {
    public:
     virtual ~GpuResources();
@@ -183,7 +183,7 @@ class GpuResources {
     /// of demand
     virtual void initializeForDevice(int device) = 0;
 
-    /// Returns the cuBLAS handle that we use for the given device
+    /// Returns the hipBlas handle that we use for the given device
     virtual hipblasHandle_t getBlasHandle(int device) = 0;
 
     /// Returns the stream that we order all computation on for the
