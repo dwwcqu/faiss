@@ -119,8 +119,8 @@ TEST(TestCodePacking, InterleavedCodes_UnpackPack) {
                 std::cout << bitsPerCode << " " << dims << " " << numVecs
                           << "\n";
 
-                int blocks = utils::divUp(numVecs, 32);
-                int bytesPerDimBlock = 32 * bitsPerCode / 8;
+                int blocks = utils::divUp(numVecs, 64);
+                int bytesPerDimBlock = 64 * bitsPerCode / 8;
                 int bytesPerBlock = bytesPerDimBlock * dims;
                 int size = blocks * bytesPerBlock;
 
@@ -132,9 +132,9 @@ TEST(TestCodePacking, InterleavedCodes_UnpackPack) {
 
                     for (int i = 0; i < blocks; ++i) {
                         for (int j = 0; j < dims; ++j) {
-                            for (int k = 0; k < 32; ++k) {
+                            for (int k = 0; k < 64; ++k) {
                                 for (int l = 0; l < bytesPerCode; ++l) {
-                                    int vec = i * 32 + k;
+                                    int vec = i * 64 + k;
                                     if (vec < numVecs) {
                                         data[i * bytesPerBlock +
                                              j * bytesPerDimBlock +
@@ -148,7 +148,7 @@ TEST(TestCodePacking, InterleavedCodes_UnpackPack) {
                     for (int i = 0; i < blocks; ++i) {
                         for (int j = 0; j < dims; ++j) {
                             for (int k = 0; k < bytesPerDimBlock; ++k) {
-                                int loVec = i * 32 + (k * 8) / bitsPerCode;
+                                int loVec = i * 64 + (k * 8) / bitsPerCode;
                                 int hiVec = loVec + 1;
                                 int hiVec2 = hiVec + 1;
 

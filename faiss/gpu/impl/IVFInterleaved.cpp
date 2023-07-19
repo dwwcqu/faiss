@@ -148,7 +148,7 @@ void runIVFInterleavedScan2(
     if (k == 1) {
         IVF_SCAN_2(128, 1, 1);
     } else if (k <= 32) {
-        IVF_SCAN_2(128, 32, 2);
+        IVF_SCAN_2(128, 64, 2);
     } else if (k <= 64) {
         IVF_SCAN_2(128, 64, 3);
     } else if (k <= 128) {
@@ -190,7 +190,7 @@ void runIVFInterleavedScan(
     if (k == 1) {
         IVF_INTERLEAVED_CALL(1);
     } else if (k <= 32) {
-        IVF_INTERLEAVED_CALL(32);
+        IVF_INTERLEAVED_CALL(64);
     } else if (k <= 64) {
         IVF_INTERLEAVED_CALL(64);
     } else if (k <= 128) {

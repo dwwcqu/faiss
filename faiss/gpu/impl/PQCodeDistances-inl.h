@@ -28,7 +28,7 @@ template <
         typename CentroidT,
         int DimsPerSubQuantizer,
         bool L2Distance>
-__global__ void __launch_bounds__(288, 3) pqCodeDistances(
+__global__ void __launch_bounds__(320, 3) pqCodeDistances(
         Tensor<float, 2, true> queries,
         int queriesPerBlock,
         Tensor<CentroidT, 2, true> coarseCentroids,
@@ -642,7 +642,7 @@ void runPQCodeDistances(
         if (useFloat16Lookup) {                                          \
             auto outCodeDistancesT = outCodeDistances.toTensor<half>();  \
                                                                          \
-            pqCodeDistances<half, CentroidT, DIMS, L2>                   \
+            HIP_KERNEL_NAME(pqCodeDistances<half, CentroidT, DIMS, L2>)  \
                     <<<grid, block, smem, stream>>>(                     \
                             queries,                                     \
                             kQueriesPerBlock,                            \
@@ -653,7 +653,7 @@ void runPQCodeDistances(
         } else {                                                         \
             auto outCodeDistancesT = outCodeDistances.toTensor<float>(); \
                                                                          \
-            pqCodeDistances<float, CentroidT, DIMS, L2>                  \
+            HIP_KERNEL_NAME(pqCodeDistances<float, CentroidT, DIMS, L2>) \
                     <<<grid, block, smem, stream>>>(                     \
                             queries,                                     \
                             kQueriesPerBlock,                            \
