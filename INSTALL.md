@@ -69,8 +69,8 @@ performance).
 
 The optional requirements are:
 - for GPU indices:
-  - nvcc,
-  - the CUDA toolkit,
+  - hipcc,
+  - the ROCm,
 - for the python bindings:
   - python 3,
   - numpy,
@@ -110,12 +110,6 @@ Several options can be passed to CMake, among which:
   (more information about the values for the `BLA_VENDOR` option can be found in
   the [CMake docs](https://cmake.org/cmake/help/latest/module/FindBLAS.html)),
 - GPU-related options:
-  - `-DCUDAToolkit_ROOT=/path/to/cuda-10.1` in order to hint to the path of
-  the CUDA toolkit (for more information, see
-  [CMake docs](https://cmake.org/cmake/help/latest/module/FindCUDAToolkit.html)),
-  - `-DCMAKE_CUDA_ARCHITECTURES="75;72"` for specifying which GPU architectures
-  to build against (see [CUDA docs](https://developer.nvidia.com/cuda-gpus) to
-  determine which architecture(s) you should pick),
   - `-DCMAKE_HIP_COMPILER_ROCM_ROOT:PATH=/path/to/rocm` in order to hint the path of
   the ROCm toolkit,
   - `-DCMAKE_HIP_ARCHITECTURES="gfx906;gfx916"` for specifying which GPU architectures
