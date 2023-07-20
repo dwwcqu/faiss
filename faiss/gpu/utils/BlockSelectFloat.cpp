@@ -13,7 +13,7 @@ namespace gpu {
 
 // warp Q to thread Q:
 // 1, 1
-// 32, 2
+// 64, 2
 // 64, 3
 // 128, 3
 // 256, 4

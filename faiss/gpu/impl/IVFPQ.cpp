@@ -261,13 +261,13 @@ size_t IVFPQ::getGpuVectorsEncodingSize_(int numVecs) const {
         // bits per PQ code
         int bits = bitsPerSubQuantizer_;
 
-        // bytes to encode a block of 32 vectors (single PQ code)
+        // bytes to encode a block of 64 vectors (single PQ code)
         int bytesPerDimBlock = bits * 64 / 8;
 
-        // bytes to fully encode 32 vectors
+        // bytes to fully encode 64 vectors
         int bytesPerBlock = bytesPerDimBlock * numSubQuantizers_;
 
-        // number of blocks of 32 vectors we have
+        // number of blocks of 64 vectors we have
         int numBlocks = utils::divUp(numVecs, 64);
 
         // total size to encode numVecs

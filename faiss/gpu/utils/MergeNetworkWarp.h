@@ -20,7 +20,7 @@ namespace gpu {
 // This file contains functions to:
 //
 // -perform bitonic merges on pairs of sorted lists, held in
-// registers. Each list contains N * kWarpSize (multiple of 32)
+// registers. Each list contains N * kWarpSize (multiple of 64)
 // elements for some N.
 // The bitonic merge is implemented for arbitrary sizes;
 // sorted list A of size N1 * kWarpSize registers
@@ -79,7 +79,7 @@ namespace gpu {
 
 // This function merges kWarpSize / 2L lists in parallel using warp
 // shuffles.
-// It works on at most size-16 lists, as we need 32 threads for this
+// It works on at most size-32 lists, as we need 64 threads for this
 // shuffle merge.
 //
 // If IsBitonic is false, the first stage is reversed, so we don't

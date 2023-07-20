@@ -97,10 +97,10 @@ __global__ void ivfInterleavedScan(
     codec.initKernel(smem, dim);
     __syncthreads();
 
-    // How many vector blocks of 32 are in this list?
+    // How many vector blocks of 64 are in this list?
     int numBlocks = utils::divUp(numVecs, 64);
 
-    // Number of EncodeT words per each dimension of block of 32 vecs
+    // Number of EncodeT words per each dimension of block of 64 vecs
     constexpr int bytesPerVectorBlockDim = Codec::kEncodeBits * 64 / 8;
     constexpr int wordsPerVectorBlockDim =
             bytesPerVectorBlockDim / sizeof(EncodeT);
@@ -406,7 +406,7 @@ __global__ void ivfInterleavedScan(
         }                                                                 \
     } while (0)
 
-// Top-level IVF scan function for the interleaved by 32 layout
+// Top-level IVF scan function for the interleaved by 64 layout
 // with all implementations
 void runIVFInterleavedScan(
         Tensor<float, 2, true>& queries,

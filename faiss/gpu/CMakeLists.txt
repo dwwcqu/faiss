@@ -41,7 +41,7 @@ set(FAISS_GPU_SRC
   impl/RemapIndices.cpp
   impl/VectorResidual.cpp
   impl/scan/IVFInterleaved1.cpp
-  impl/scan/IVFInterleaved32.cpp
+  # impl/scan/IVFInterleaved32.cpp
   impl/scan/IVFInterleaved64.cpp
   impl/scan/IVFInterleaved128.cpp
   impl/scan/IVFInterleaved256.cpp
@@ -55,7 +55,7 @@ set(FAISS_GPU_SRC
   utils/Timer.cpp
   utils/WarpSelectFloat.cpp
   utils/blockselect/BlockSelectFloat1.cpp
-  utils/blockselect/BlockSelectFloat32.cpp
+  # utils/blockselect/BlockSelectFloat32.cpp
   utils/blockselect/BlockSelectFloat64.cpp
   utils/blockselect/BlockSelectFloat128.cpp
   utils/blockselect/BlockSelectFloat256.cpp
@@ -178,10 +178,10 @@ foreach(header ${FAISS_GPU_HEADERS})
 endforeach()
 find_package(hip REQUIRED)
 find_package(rocthrust REQUIRED)
-find_package(rocblas REQUIRED)
+find_package(hipblas REQUIRED)
 find_package(hiprand REQUIRED)
 find_package(rocrand REQUIRED)
-target_link_libraries(faiss PRIVATE hip::host hip::device roc::rocthrust roc::rocblas hip::hiprand roc::rocrand)
-target_link_libraries(faiss_avx2 PRIVATE hip::host hip::device roc::rocthrust roc::rocblas hip::hiprand roc::rocrand)
+target_link_libraries(faiss PRIVATE hip::host hip::device roc::rocthrust roc::hipblas hip::hiprand roc::rocrand)
+target_link_libraries(faiss_avx2 PRIVATE hip::host hip::device roc::rocthrust roc::hipblas hip::hiprand roc::rocrand)
 # target_compile_options(faiss PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-Xfatbin=-compress-all>)
 # target_compile_options(faiss_avx2 PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-Xfatbin=-compress-all>)

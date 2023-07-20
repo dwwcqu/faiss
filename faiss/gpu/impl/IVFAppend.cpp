@@ -388,18 +388,18 @@ __global__ void ivfInterleavedAppend(
     // These are the actual vec IDs that we are adding (in vecs)
     int* listVecIds = vectorsByUniqueList[vecIdStart].data();
 
-    // All data is written by groups of 32 vectors (to mirror the warp).
+    // All data is written by groups of 64 vectors (to mirror the warp).
     // listVecStart could be in the middle of this, or even, for sub-byte
     // encodings, mean that the first vector piece of data that we need to
     // update is in the high part of a byte.
     //
     // WarpPackedBits allows writing of arbitrary bit packed data in groups of
-    // 32, but we ensure that it only operates on the group of 32 vectors. In
+    // 64, but we ensure that it only operates on the group of 64 vectors. In
     // order to do this we need to actually start updating vectors at the next
-    // lower multiple of 32 from listVecStart.
+    // lower multiple of 64 from listVecStart.
     int alignedListVecStart = utils::roundDown(listVecStart, 64);
 
-    // Each block of 32 vectors fully encodes into this many bytes
+    // Each block of 64 vectors fully encodes into this many bytes
     constexpr int bytesPerVectorBlockDim = EncodeBits * 64 / 8;
     constexpr int wordsPerVectorBlockDim =
             bytesPerVectorBlockDim / sizeof(EncodeT);
@@ -407,7 +407,7 @@ __global__ void ivfInterleavedAppend(
 
     EncodeT* listStart = ((EncodeT*)listData[listId]);
 
-    // Each warp within the block handles a different chunk of 32
+    // Each warp within the block handles a different chunk of 64
     int warpVec = alignedListVecStart + warpId * 64;
 
     // The warp data starts here

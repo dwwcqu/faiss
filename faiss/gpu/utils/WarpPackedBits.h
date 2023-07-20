@@ -37,7 +37,7 @@ struct WarpPackedBits {
     }
 };
 
-// Read/write 6 bit fields, packed across the warp into 24 bytes
+// Read/write 6 bit fields, packed across the warp into 48 bytes
 template <>
 struct WarpPackedBits<uint8_t, 6> {
     static __device__ void write(
@@ -45,7 +45,7 @@ struct WarpPackedBits<uint8_t, 6> {
             uint8_t v,
             bool valid,
             uint8_t* out) {
-        // Lower 24 lanes wwrite out packed data
+        // Lower 48 lanes wwrite out packed data
         int laneFrom = (laneId * 8) / 6;
 
         v = valid ? v : 0;
@@ -80,7 +80,7 @@ struct WarpPackedBits<uint8_t, 6> {
                 break;
         }
 
-        if (laneId < 24) {
+        if (laneId < 48) {
             // There could be prior data
             out[laneId] |= vOut;
         }
@@ -89,7 +89,7 @@ struct WarpPackedBits<uint8_t, 6> {
     static inline __device__ uint8_t read(int laneId, uint8_t* in) {
         uint8_t v = 0;
 
-        if (laneId < 24) {
+        if (laneId < 48) {
             v = in[laneId];
         }
 
@@ -126,7 +126,7 @@ struct WarpPackedBits<uint8_t, 6> {
     }
 };
 
-// Read/write 5 bit fields, packed across the warp into 20 bytes
+// Read/write 5 bit fields, packed across the warp into 40 bytes
 template <>
 struct WarpPackedBits<uint8_t, 5> {
     static __device__ void write(
@@ -184,7 +184,7 @@ struct WarpPackedBits<uint8_t, 5> {
                 break;
         }
 
-        if (laneId < 20) {
+        if (laneId < 40) {
             // There could be prior data
             out[laneId] |= vOut;
         }
@@ -193,7 +193,7 @@ struct WarpPackedBits<uint8_t, 5> {
     static inline __device__ uint8_t read(int laneId, uint8_t* in) {
         uint8_t v = 0;
 
-        if (laneId < 20) {
+        if (laneId < 40) {
             v = in[laneId];
         }
 
@@ -234,7 +234,7 @@ struct WarpPackedBits<uint8_t, 5> {
     }
 };
 
-// Read/write 4 bit fields, packed across the warp into 16 bytes
+// Read/write 4 bit fields, packed across the warp into 32 bytes
 template <>
 struct WarpPackedBits<uint8_t, 4> {
     static __device__ void write(
@@ -254,7 +254,7 @@ struct WarpPackedBits<uint8_t, 4> {
 
         uint8_t vOut = (vLower & 0xf) | (vUpper << 4);
 
-        if (laneId < 16) {
+        if (laneId < 32) {
             // There could be prior data
             out[laneId] |= vOut;
         }
@@ -263,7 +263,7 @@ struct WarpPackedBits<uint8_t, 4> {
     static inline __device__ uint8_t read(int laneId, uint8_t* in) {
         uint8_t v = 0;
 
-        if (laneId < 16) {
+        if (laneId < 32) {
             v = in[laneId];
         }
 
