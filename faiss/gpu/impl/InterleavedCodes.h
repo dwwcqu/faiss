@@ -11,7 +11,7 @@
 #include <vector>
 
 // Utilities for bit packing and unpacking CPU non-interleaved and GPU
-// interleaved by 32 encodings
+// interleaved by 64 encodings
 namespace faiss {
 namespace gpu {
 

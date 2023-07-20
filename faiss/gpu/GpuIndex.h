@@ -172,7 +172,7 @@ class GpuIndex : public faiss::Index {
             const SearchParameters* params) const;
 
    protected:
-    /// Manages streams, cuBLAS handles and scratch memory for devices
+    /// Manages streams, hipBLAS handles and scratch memory for devices
     std::shared_ptr<GpuResources> resources_;
 
     /// Our configuration options

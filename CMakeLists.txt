@@ -43,7 +43,11 @@ project(faiss
   VERSION 1.7.4
   DESCRIPTION "A library for efficient similarity search and clustering of dense vectors."
   HOMEPAGE_URL "https://github.com/facebookresearch/faiss"
+<<<<<<< HEAD
   LANGUAGES ${FAISS_LANGUAGES})
+=======
+  LANGUAGES CXX HIP)
+>>>>>>> port_to_rocm/v1.7.3
 include(GNUInstallDirs)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -53,21 +57,37 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 # Valid values are "generic", "avx2".
 option(FAISS_OPT_LEVEL "" "generic")
 option(FAISS_ENABLE_GPU "Enable support for GPU indexes." ON)
+<<<<<<< HEAD
 option(FAISS_ENABLE_RAFT "Enable RAFT for GPU indexes." OFF)
 option(FAISS_ENABLE_PYTHON "Build Python extension." ON)
+=======
+option(FAISS_ENABLE_PYTHON "Build Python extension." OFF)
+>>>>>>> port_to_rocm/v1.7.3
 option(FAISS_ENABLE_C_API "Build C API." OFF)
+option(BUILD_TESTING "Build Test." OFF)
 
+# ROCm configuration
 if(FAISS_ENABLE_GPU)
-  set(CMAKE_CUDA_HOST_COMPILER ${CMAKE_CXX_COMPILER})
-  enable_language(CUDA)
+  list(APPEND CMAKE_PREFIX_PATH "/opt/rocm/")
+  set(AMDGPU_TARGETS "gfx916" CACHE STRING "Choose the ROCm architectures of compiler to build")
+  set(HIP_ARCHITECTURES "gfx906;gfx916" CACHE STRING "Choose the ROCm architectures of compiler to build")
+  set(CMAKE_CXX_COMPILER $ENV{CXX} CACHE STRING
+      "Choose the type of compiler to build: Default point to hipcc")
 endif()
 
+<<<<<<< HEAD
 if(FAISS_ENABLE_RAFT)
   rapids_cpm_init()
   include(cmake/thirdparty/get_raft.cmake)
   include(cmake/thirdparty/get_cutlass.cmake)
 endif()
 
+=======
+# if debug compile, set the optimazation 0
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  add_compile_options(-O0)
+endif()
+>>>>>>> port_to_rocm/v1.7.3
 add_subdirectory(faiss)
 
 if(FAISS_ENABLE_GPU)

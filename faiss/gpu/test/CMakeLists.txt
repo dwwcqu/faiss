@@ -17,13 +17,18 @@
 # the License.
 # =============================================================================
 
-find_package(CUDAToolkit REQUIRED)
+find_package(hip REQUIRED)
+find_package(hipblas REQUIRED)
 
 # Defines `gtest_discover_tests()`.
 include(GoogleTest)
 
 add_library(faiss_gpu_test_helper TestUtils.cpp)
+<<<<<<< HEAD
 target_link_libraries(faiss_gpu_test_helper PUBLIC faiss gtest CUDA::cudart $<$<BOOL:${FAISS_ENABLE_RAFT}>:raft::raft>)
+=======
+target_link_libraries(faiss_gpu_test_helper PUBLIC faiss gtest hip::host hip::device roc::hipblas)
+>>>>>>> port_to_rocm/v1.7.3
 
 macro(faiss_gpu_test file)
   get_filename_component(test_name ${file} NAME_WE)
@@ -40,11 +45,14 @@ faiss_gpu_test(TestGpuIndexBinaryFlat.cpp)
 faiss_gpu_test(TestGpuMemoryException.cpp)
 faiss_gpu_test(TestGpuIndexIVFPQ.cpp)
 faiss_gpu_test(TestGpuIndexIVFScalarQuantizer.cpp)
-faiss_gpu_test(TestGpuDistance.cu)
-faiss_gpu_test(TestGpuSelect.cu)
+faiss_gpu_test(TestGpuDistance.cpp)
+faiss_gpu_test(TestGpuSelect.cpp)
 
 add_executable(demo_ivfpq_indexing_gpu EXCLUDE_FROM_ALL
   demo_ivfpq_indexing_gpu.cpp)
 
 target_link_libraries(demo_ivfpq_indexing_gpu
-  PRIVATE faiss gtest_main CUDA::cudart)
+  PRIVATE faiss gtest_main)
+
+## ours porting CUDA-backend to RCOm-backend test case
+add_subdirectory(ports)

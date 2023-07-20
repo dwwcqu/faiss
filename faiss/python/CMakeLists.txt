@@ -93,9 +93,15 @@ else()
 endif()
 
 if(FAISS_ENABLE_GPU)
+<<<<<<< HEAD
   find_package(CUDAToolkit REQUIRED)
   target_link_libraries(swigfaiss PRIVATE CUDA::cudart $<$<BOOL:${FAISS_ENABLE_RAFT}>:raft::raft> $<$<BOOL:${FAISS_ENABLE_RAFT}>:nvidia::cutlass::cutlass>)
   target_link_libraries(swigfaiss_avx2 PRIVATE CUDA::cudart $<$<BOOL:${FAISS_ENABLE_RAFT}>:raft::raft> $<$<BOOL:${FAISS_ENABLE_RAFT}>:nvidia::cutlass::cutlass>)
+=======
+  find_package(hip REQUIRED)
+  target_link_libraries(swigfaiss PRIVATE hip::host)
+  target_link_libraries(swigfaiss_avx2 PRIVATE hip::host)
+>>>>>>> port_to_rocm/v1.7.3
 endif()
 
 find_package(OpenMP REQUIRED)

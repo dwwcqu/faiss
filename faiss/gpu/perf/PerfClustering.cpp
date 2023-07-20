@@ -16,7 +16,7 @@
 #include <memory>
 #include <vector>
 
-#include <cuda_profiler_api.h>
+#include <hip/hip_profile.h>
 
 DEFINE_int32(num, 10000, "# of vecs");
 DEFINE_int32(k, 100, "# of clusters");
@@ -40,7 +40,7 @@ using namespace faiss::gpu;
 int main(int argc, char** argv) {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
 
-    cudaProfilerStop();
+    hipProfilerStop();
 
     auto seed = FLAGS_seed != -1L ? FLAGS_seed : time(nullptr);
     printf("using seed %ld\n", seed);
@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
 
     IndexWrapper<faiss::gpu::GpuIndexFlat> gpuIndex(FLAGS_num_gpus, initFn);
 
-    CUDA_VERIFY(cudaProfilerStart());
+    CUDA_VERIFY(hipProfilerStart());
     faiss::gpu::synchronizeAllDevices();
 
     float gpuTime = 0.0f;
@@ -112,10 +112,10 @@ int main(int argc, char** argv) {
         gpuTime = timer.elapsedMilliseconds();
     }
 
-    CUDA_VERIFY(cudaProfilerStop());
+    CUDA_VERIFY(hipProfilerStop());
     printf("k-means time %.3f ms\n", gpuTime);
 
-    CUDA_VERIFY(cudaDeviceSynchronize());
+    CUDA_VERIFY(hipDeviceSynchronize());
 
     return 0;
 }

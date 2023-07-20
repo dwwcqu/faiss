@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <cuda_profiler_api.h>
+#include <hip/hip_profile.h>
 #include <faiss/IndexFlat.h>
 #include <faiss/IndexIVFPQ.h>
 #include <faiss/gpu/GpuIndexIVFPQ.h>
@@ -32,7 +32,7 @@ DEFINE_bool(reserve_memory, false, "whether or not to pre-reserve memory");
 int main(int argc, char** argv) {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
 
-    cudaProfilerStop();
+    hipProfilerStop();
 
     int dim = FLAGS_dim;
     int numCentroids = FLAGS_centroids;
@@ -73,8 +73,8 @@ int main(int argc, char** argv) {
         }
     }
 
-    cudaDeviceSynchronize();
-    CUDA_VERIFY(cudaProfilerStart());
+    hipDeviceSynchronize();
+    CUDA_VERIFY(hipProfilerStart());
 
     float totalGpuTime = 0.0f;
     float totalCpuTime = 0.0f;
@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
         if (FLAGS_time_gpu) {
             faiss::gpu::CpuTimer timer;
             gpuIndex.add(FLAGS_batch_size, addVecs.data());
-            CUDA_VERIFY(cudaDeviceSynchronize());
+            CUDA_VERIFY(hipDeviceSynchronize());
             auto time = timer.elapsedMilliseconds();
 
             totalGpuTime += time;
@@ -122,7 +122,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    CUDA_VERIFY(cudaProfilerStop());
+    CUDA_VERIFY(hipProfilerStop());
 
     int total = FLAGS_batch_size * FLAGS_batches;
 
