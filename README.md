@@ -13,15 +13,6 @@ make -C build -j
 CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Release -DFAISS_ENABLE_GPU=ON -B build .
 make -C build -j
 ```
-
-We monitor the [issues page](http://github.com/facebookresearch/faiss/issues) of the repository.
-You can report bugs, ask questions, etc.
-
-## Legal
-
-Faiss is MIT-licensed, refer to the [LICENSE file](https://github.com/facebookresearch/faiss/blob/main/LICENSE) in the top level directory.
-
-Copyright © Meta Platforms, Inc. See the [Terms of Use](https://opensource.fb.com/legal/terms/) and [Privacy Policy](https://opensource.fb.com/legal/privacy/) for this project.
 ## Test
 ```bash
 # /path/to/faiss
