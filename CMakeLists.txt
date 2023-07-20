@@ -10,7 +10,7 @@ project(faiss
   VERSION 1.7.3
   DESCRIPTION "A library for efficient similarity search and clustering of dense vectors."
   HOMEPAGE_URL "https://github.com/facebookresearch/faiss"
-  LANGUAGES CXX)
+  LANGUAGES CXX HIP)
 include(GNUInstallDirs)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -22,15 +22,21 @@ option(FAISS_OPT_LEVEL "" "generic")
 option(FAISS_ENABLE_GPU "Enable support for GPU indexes." ON)
 option(FAISS_ENABLE_PYTHON "Build Python extension." OFF)
 option(FAISS_ENABLE_C_API "Build C API." OFF)
+option(BUILD_TESTING "Build Test." OFF)
 
+# ROCm configuration
 if(FAISS_ENABLE_GPU)
   list(APPEND CMAKE_PREFIX_PATH "/opt/rocm/")
   set(AMDGPU_TARGETS "gfx916" CACHE STRING "Choose the ROCm architectures of compiler to build")
   set(HIP_ARCHITECTURES "gfx906;gfx916" CACHE STRING "Choose the ROCm architectures of compiler to build")
-  set(CMAKE_CXX_COMPILER "/opt/rocm/bin/hipcc" CACHE STRING
+  set(CMAKE_CXX_COMPILER $ENV{CXX} CACHE STRING
       "Choose the type of compiler to build: Default point to hipcc")
 endif()
 
+# if debug compile, set the optimazation 0
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  add_compile_options(-O0)
+endif()
 add_subdirectory(faiss)
 
 if(FAISS_ENABLE_GPU)
