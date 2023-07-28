@@ -198,8 +198,11 @@ endif()
 set(FAISS_HEADERS ${FAISS_HEADERS} PARENT_SCOPE)
 
 add_library(faiss ${FAISS_SRC})
-
+# enable C++ standard 17
+set_target_properties(faiss PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON CMAKE_CXX_EXTENSIONS OFF)
 add_library(faiss_avx2 ${FAISS_SRC})
+# enable C++ standard 17
+set_target_properties(faiss_avx2 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON CMAKE_CXX_EXTENSIONS OFF)
 if(NOT FAISS_OPT_LEVEL STREQUAL "avx2")
   set_target_properties(faiss_avx2 PROPERTIES EXCLUDE_FROM_ALL TRUE)
 endif()

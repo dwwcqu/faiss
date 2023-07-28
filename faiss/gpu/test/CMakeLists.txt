@@ -16,6 +16,8 @@ target_link_libraries(faiss_gpu_test_helper PUBLIC faiss gtest hip::host hip::de
 macro(faiss_gpu_test file)
   get_filename_component(test_name ${file} NAME_WE)
   add_executable(${test_name} ${file})
+  # enable C++ standard 17
+  set_target_properties(${test_name} PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON CMAKE_CXX_EXTENSIONS OFF)
   target_link_libraries(${test_name} PRIVATE faiss_gpu_test_helper)
   gtest_discover_tests(${test_name})
 endmacro()

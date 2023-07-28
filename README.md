@@ -6,11 +6,11 @@
 ```bash
 # /path/to/faiss
 # Debug 版本
-CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Debug -DFAISS_ENABLE_GPU=ON -B build .
+CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Debug -DFAISS_ENABLE_GPU=ON -DAMDGPU_TARGETS="your arch" -B build .
 make -C build -j
 # /path/to/faiss
 # Release 版本
-CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Release -DFAISS_ENABLE_GPU=ON -B build .
+CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Release -DFAISS_ENABLE_GPU=ON -DAMDGPU_TARGETS="your arch" -B build .
 make -C build -j
 ```
 
@@ -18,12 +18,12 @@ make -C build -j
 ```bash
 # /path/to/faiss
 # Debug 版本
-CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DFAISS_ENABLE_GPU=ON -B build .
+CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DFAISS_ENABLE_GPU=ON -DAMDGPU_TARGETS="your arch" -B build .
 make -C build -j
 make -C build test
 # /path/to/faiss
 # Release 版本
-CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DFAISS_ENABLE_GPU=ON -B build .
+CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DFAISS_ENABLE_GPU=ON -DAMDGPU_TARGETS="your arch"  -B build .
 make -C build -j
 make -C build test
 ```
@@ -32,12 +32,12 @@ make -C build test
 ```bash
 # /path/to/faiss
 # Debug 版本
-CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=/path/to/install/ -DFAISS_ENABLE_GPU=ON -B build .
+CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=/path/to/install/ -DFAISS_ENABLE_GPU=ON -DAMDGPU_TARGETS="your arch"  -B build .
 make -C build -j
 make -C build install
 # /path/to/faiss
 # Release 版本
-CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/path/to/install/ -DFAISS_ENABLE_GPU=ON -B build .
+CXX=/path/to/your/hipcc cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/path/to/install/ -DFAISS_ENABLE_GPU=ON -DAMDGPU_TARGETS="your arch"  -B build .
 make -C build -j
 make -C build install
 ```
